@@ -45,7 +45,7 @@ const SignupForm = () => {
             <input 
                 ref={passwordRef}
                 placeholder='Mật khẩu...'
-                type="text" 
+                type="password" 
                 id="password"
                 className='text-gray-400 text-sm focus:outline-none py-2 px-2 font-medium'
             />
@@ -58,7 +58,7 @@ const SignupForm = () => {
             <input 
                 ref={confirmRef}
                 placeholder='Mật khẩu...'
-                type="text" 
+                type="password" 
                 id="confirm-password"
                 className='text-gray-400 text-sm focus:outline-none py-2 px-2 font-medium'
             />

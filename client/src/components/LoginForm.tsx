@@ -25,14 +25,26 @@ const LoginForm = () => {
             >
                 Tài khoản
             </label>         
-            <input ref={userRef} type="text" id="username" name='username'/>
+            <input 
+                ref={userRef} 
+                type="text" 
+                id="username" 
+                name='username'
+                className='text-gray-400 text-sm focus:outline-none py-2 px-2 font-medium'
+            />
             <label 
             className="text-sm text-sky-600 font-medium"
             htmlFor="password"
             >
                 Mật khẩu
             </label>         
-            <input ref={passwordRef} type="password" id="password" name='password'/>
+            <input 
+                ref={passwordRef} 
+                type="password" 
+                id="password" 
+                name='password'
+                className='text-gray-400 text-sm focus:outline-none py-2 px-2 font-medium'
+            />
             <div className='h-[2px] w-2/3 bg-gray-300 self-center'></div>
             <span className='self-center text-sm font-medium text-gray-400'>Hoặc đăng nhập bằng</span>
             <div className='flex items-center self-center'>

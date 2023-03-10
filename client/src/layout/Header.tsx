@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import DropDownCart from '../components/DropDownCart';
-import AuthenForm from '../components/AuthenForm';
+import AuthenFormControl from '../components/AuthenFormControl';
 import SearchBar from '../components/SearchBar';
 
 const Header = () => {
@@ -13,10 +13,7 @@ const Header = () => {
         </ul>
         <SearchBar />
         <div className='flex items-center gap-3'>
-          <button className='px-3 py-1 font-semibold border rounded-sm border-sky-600 text-sky-600 hover:bg-slate-200'>
-            Đăng nhập
-          </button>
-          <AuthenForm />
+          <AuthenFormControl />
           <div>
             <DropDownCart />
           </div>
