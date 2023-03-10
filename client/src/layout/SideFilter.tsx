@@ -1,27 +1,24 @@
+import { useState } from 'react'
 import { ImStarFull } from 'react-icons/im'
+import { isRangeOption, RangeOption, ListOption, FilterCategory } from '../types/Filter'
+import { categories } from '../assets/fitlerCategories'
 
-type FilterCategory = {
-    title: string,
-    options: string[] | number[],
-    type?: 'single' | 'multi'
-}
-
-const categories : FilterCategory[] = [
-    {
-        title: "Price",
-        options: ["Dưới 100k", "100k-500k", "500k-1000k", "Trên 1000k"]
-    },
-    {
-        title: "Rating",
-        options: ["From 3", "From 4", "From 5",]
-    },
-    {
-        title: "Genre",
-        options: ["Drama", "Fantasy", "Sci-fi", "Adventure", "Light novel", "Romance", "Comedy"]
+const FilterOption = ({title, options, type} : FilterCategory ) => {
+    const [ selected, setSelected ] = useState<number[]>([])
+    function handleSelect(i : number) {
+        if(type === 'SINGLE_SELECT') {
+            setSelected(prevSelected => {
+                return prevSelected.includes(i) ? [] : [i]
+            })
+        } 
+        else if(type === 'MULTI_SELECT') {
+            setSelected(prevSelected => {
+                return prevSelected.includes(i) 
+                    ? prevSelected.filter(s => s !==i)
+                    : [i, ...prevSelected]
+            })
+        } 
     }
-]
-
-const FilterOption = ({title, options} : FilterCategory ) => {
     return (
         <div className='mb-1 px-2 py-1'>
             <p className='font-semibold text-base'>{title}</p>
@@ -31,13 +28,15 @@ const FilterOption = ({title, options} : FilterCategory ) => {
                         <li className='list-none flex items-center' key={i}>
                             <input 
                                 className='w-[20px] h-[20px] border border-sky-600 rounded-md mr-2 focus:outline-none' 
-                                type='checkBox'
+                                type='checkbox'
+                                checked = {selected.includes(i) ? true : false}
+                                onClick={() => {handleSelect(i)}}
                             />
-                            {title !== 'Rating' 
-                                ? <span>{op}</span>
+                            {title !== 'Đánh giá'
+                                ? <span>{isRangeOption(op) ? op.description : op.value}</span>
                                 : 
                                 <span className='flex items-center'>
-                                    {op} <ImStarFull className='ml-1 text-amber-200'/>
+                                    {isRangeOption(op) && op.description} <ImStarFull className='ml-1 text-amber-200'/>
                                 </span>
                             }
                         </li>
@@ -50,8 +49,17 @@ const FilterOption = ({title, options} : FilterCategory ) => {
 
 const SideFilter = () => {
   return (
-    <div className='border sticky top-0 border-gray-400 w-[250px] h-fit rounded-sm'>
-        {categories.map((c, i) => <FilterOption {...c} key={i}/>)}
+    <div className='border sticky top-0 py-2 border-gray-400 w-[250px] flex flex-col h-fit rounded-sm'>
+        <div className='self-center flex items-center flex-col gap-2'>
+            <h4>Phân loại</h4>
+            <button className='border px-1 py-1 border-sky-600 text-sky-600 font-semibold hover'>
+                Áp dụng
+            </button>
+
+        </div>
+        {categories.map((c , i) => {
+            return <FilterOption {...c} key={i}/>}
+        )}
     </div>
   )
 }
