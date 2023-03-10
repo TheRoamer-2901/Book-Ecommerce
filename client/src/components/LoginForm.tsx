@@ -1,25 +1,38 @@
+import { useRef } from 'react'
 import { BsFacebook } from 'react-icons/bs'
 import { FcGoogle } from 'react-icons/fc'
+import { getUser } from '../lib/axios/user'
 
 
 
 const LoginForm = () => {
+    const userRef = useRef<HTMLInputElement>(null)
+    const passwordRef = useRef<HTMLInputElement>(null)
+
+    async function handleSubmit(e : React.FormEvent<HTMLFormElement>) {
+        e.preventDefault()
+        if(userRef.current != null && passwordRef.current != null) {
+            let res = await getUser(userRef.current.value, passwordRef.current.value)
+            console.log(res)
+        }
+    }
+
     return (
-        <form className="flex flex-col gap-3">
+        <form className="flex flex-col gap-3" onSubmit={(e) => handleSubmit(e)}>
             <label 
                 className="text-sm text-sky-600 font-medium"
                 htmlFor="username"
             >
                 Tài khoản
             </label>         
-            <input type="text" id="username"/>
+            <input ref={userRef} type="text" id="username" name='username'/>
             <label 
             className="text-sm text-sky-600 font-medium"
             htmlFor="password"
             >
                 Mật khẩu
             </label>         
-            <input type="password" id="password"/>
+            <input ref={passwordRef} type="password" id="password" name='password'/>
             <div className='h-[2px] w-2/3 bg-gray-300 self-center'></div>
             <span className='self-center text-sm font-medium text-gray-400'>Hoặc đăng nhập bằng</span>
             <div className='flex items-center self-center'>
