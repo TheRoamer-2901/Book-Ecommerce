@@ -45,4 +45,5 @@ export const {
     productReduced,
     productRemoved
 } = cartSlice.actions
+
 export default cartSlice.reducer

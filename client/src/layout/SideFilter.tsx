@@ -1,24 +1,12 @@
 import { useState } from 'react'
 import { ImStarFull } from 'react-icons/im'
 import { isRangeOption, RangeOption, ListOption, FilterCategory } from '../types/Filter'
-import { categories } from '../assets/fitlerCategories'
+import { filterApplied } from '../redux/slices/productOption'
+import { useAppSelector, useAppDispatch } from '../hooks/hook'
 
 const FilterOption = ({title, options, type} : FilterCategory ) => {
     const [ selected, setSelected ] = useState<number[]>([])
-    function handleSelect(i : number) {
-        if(type === 'SINGLE_SELECT') {
-            setSelected(prevSelected => {
-                return prevSelected.includes(i) ? [] : [i]
-            })
-        } 
-        else if(type === 'MULTI_SELECT') {
-            setSelected(prevSelected => {
-                return prevSelected.includes(i) 
-                    ? prevSelected.filter(s => s !==i)
-                    : [i, ...prevSelected]
-            })
-        } 
-    }
+    const dispatch = useAppDispatch()
     return (
         <div className='mb-1 px-2 py-1'>
             <p className='font-semibold text-base'>{title}</p>
@@ -29,8 +17,10 @@ const FilterOption = ({title, options, type} : FilterCategory ) => {
                             <input 
                                 className='w-[20px] h-[20px] border border-sky-600 rounded-md mr-2 focus:outline-none' 
                                 type='checkbox'
-                                checked = {selected.includes(i) ? true : false}
-                                onClick={() => {handleSelect(i)}}
+                                checked = {op.selected ? true : false}
+                                onClick={ () => {
+                                    dispatch(filterApplied({title: title, index: i}))
+                                }}
                             />
                             {title !== 'Đánh giá'
                                 ? <span>{isRangeOption(op) ? op.description : op.value}</span>
@@ -48,22 +38,19 @@ const FilterOption = ({title, options, type} : FilterCategory ) => {
 }
 
 const SideFilter = () => {
+    const filterInitOptions = useAppSelector(state => state.productOption.filterOptions)
   return (
     <div className='border sticky top-0 py-2 border-gray-400 w-[250px] flex flex-col h-fit rounded-sm'>
         <div className='self-center flex items-center flex-col gap-2'>
             <h4>Phân loại</h4>
-            <button className='border px-1 py-1 border-sky-600 text-sky-600 font-semibold hover'>
-                Áp dụng
-            </button>
 
         </div>
-        {categories.map((c , i) => {
+        {filterInitOptions.map((c , i) => {
             return <FilterOption {...c} key={i}/>}
         )}
     </div>
   )
 }
-
 
 
 
