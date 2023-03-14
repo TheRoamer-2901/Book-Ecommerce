@@ -42,6 +42,46 @@ app.get('/user', async (req, res) => {
   }
 })
 
+app.get('/product', async (req, res) => {
+  let productlist = await prisma.product.findMany({
+    take: 30
+  })
+  res.json(productlist)
+})
+
+
+app.get('/productname/:name', async (req, res) => {
+  const {name} = req.params
+  
+  if(!name) res.json([])
+  const productNames = await prisma.product.findMany({
+    where: {
+      name: {
+        contains: name,
+        mode: 'insensitive'
+      }
+    },  
+    select: {
+      id: true,
+      name: true
+    }
+  })
+  
+  res.json(productNames)
+})
+
+app.get('/product/:id', async (req, res) => {
+  
+  const { id : productId} = req.params;  
+
+  let product = await prisma.product.findUnique({
+    where: {
+      id: productId
+    }
+  })
+  res.json(product)
+})
+
 app.post('/user', async (req, res) => {
   console.log("try register new user")
   const username : any = req.query.username 
@@ -67,23 +107,7 @@ app.post('/user', async (req, res) => {
   
 })
 
-app.get('/product', async (req, res) => {
-  let productlist = await prisma.product.findMany({
-    take: 30
-  })
-  res.json(productlist)
-})
 
-app.get('/product/:id', async (req, res) => {
-  const { id : productId} = (req.params);  
-  
-  let product = await prisma.product.findUnique({
-    where: {
-      id: productId
-    }
-  })
-  res.json(product)
-})
 
 app.listen(3000, () => {
   console.log("listening on port 3000");
