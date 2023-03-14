@@ -23,7 +23,7 @@ const ProductItemDetail = () => {
       fetch(`http://localhost:3000/product/${id}`)
       .then(res => res.json())
       .then(data => setProduct(data))
-    }, [])
+    }, [id])
     return (
         <div className='flex border h-fit border-gray-200 rounded-sm'>
             <div className='h-[500px] w-[350px] overflow-hidden'>

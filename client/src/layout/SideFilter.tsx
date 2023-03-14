@@ -18,7 +18,7 @@ const FilterOption = ({title, options, type} : FilterCategory ) => {
                                 className='w-[20px] h-[20px] border border-sky-600 rounded-md mr-2 focus:outline-none' 
                                 type='checkbox'
                                 checked = {op.selected ? true : false}
-                                onClick={ () => {
+                                onChange={ () => {
                                     dispatch(filterApplied({title: title, index: i}))
                                 }}
                             />

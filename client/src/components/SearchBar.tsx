@@ -3,19 +3,58 @@ import { AiOutlineSearch } from 'react-icons/ai'
 import { IoIosArrowDown } from "react-icons/io";
 import { useAppSelector, useAppDispatch } from '../hooks/hook';
 import { searchOptionSelected } from '../redux/slices/productOption'
+import { useDebounce } from '../hooks/useDebounce';
+import { useNavigate } from 'react-router-dom';
+import { getProductByName } from '../lib/axios/product';
 
+type SearchResultItem = {
+    id: string
+    name: string,
+    author: string
+}
 
 const SearchBar = () => {
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
     const searchOption = useAppSelector(state => state.productOption.searchOption.option) 
     const [open, setOpen] = useState(false)
+    const [searchOpen, setSearchOpen] = useState(true)
+    const [searchResult, setSearchResult] = useState<SearchResultItem[]>([])
+    const [searchValue, setSearchValue] = useState<string>("")
+    
+    function navigateToPage(item: SearchResultItem) {
+        if(item.name) {     
+            setSearchValue(item.name)       
+            navigate(`/product/${item.id}`)
+        } else{
+            setSearchValue(item.author)
+            navigate(`/author/${item.author}`)
+        }
+        setSearchOpen(false)
+    }
 
-
+    useDebounce(async () => {
+        if(searchValue.trim()){
+            const data = await getProductByName(searchValue.trim())                        
+            setSearchResult(data)
+        } else{
+            setSearchResult([])
+        }
+    }, 500, [searchValue])
+    
     return (
-        <div className='flex py-0 items-center border border-gray-300 rounded-md w-fit h-fit'>
-            <AiOutlineSearch className='px-1 w-[30px] h-[30px] text-base border-r border-gray-300 hover:bg-gray-200'/>
+        <div className='relative flex py-0 items-center border border-gray-300 rounded-md w-fit h-fit'>
+            <AiOutlineSearch className='px-1 w-[30px] h-[30px] text-base '/>
             <input 
-                className='pl-3 text-sm outline-none w-[250px] h-[30px]'
+                onChange={(e) => {
+                    setSearchValue(e.target.value)
+                }}
+                onFocus={() => setSearchOpen(true)}
+                onBlur={() => {
+                    setTimeout(() => setSearchOpen(false), 100)
+                }}
+                value={searchValue}
+                className='pl-3 text-sm outline-none w-[320px] h-[30px]'
                 type='text' 
                 placeholder={`Tìm theo ${searchOption == 'AUTHOR' ? "Tác giả" : "tên sản phẩm"}...`}
             />
@@ -28,7 +67,7 @@ const SearchBar = () => {
                 </span>
                 <IoIosArrowDown className='ml-1 translate-y-[2.5px]'/>
                 {open ? 
-                <ul className='absolute top-[40px] right-0 rounded-sm bg-slate-50  border border-slate-30 list-none'>
+                <ul className='absolute top-[40px] right-0 rounded-sm bg-slate-50 z-30 border border-slate-30 list-none'>
                     <li 
                         onClick={(e) => dispatch(searchOptionSelected('PRODUCT'))}
                         className='hover:bg-slate-200 px-2 py-1'
@@ -44,6 +83,21 @@ const SearchBar = () => {
                 </ul> : null
                 }
             </div>
+            {searchResult.length > 0 && searchOpen
+            ? <ul className='absolute w-fit rounded-sm border border-gray-200 bg-gray-50 top-[50px] z-20'>
+                {searchResult.slice(0, 10).map((item, i) => {
+                    return (
+                    <li 
+                        onMouseUp={() => {navigateToPage(item)}}
+                        key={i} 
+                        className="px-1 py-1 hover:bg-gray-200 cursor-pointer"
+                    >
+                        {item.name}
+                    </li>)
+                })}
+            </ul>
+            : null}
+            
         </div>
   )
 }
