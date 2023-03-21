@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { IoIosArrowDown } from "react-icons/io";
 import { useAppSelector, useAppDispatch } from '../hooks/hook';
-import { searchOptionSelected } from '../redux/slices/productOption'
 import { useDebounce } from '../hooks/useDebounce';
 import { useNavigate } from 'react-router-dom';
 import { getProductByName } from '../lib/axios/product';
@@ -13,10 +12,12 @@ type SearchResultItem = {
     author: string
 }
 
+type SearchOption = "AUTHOR" | "PRODUCT"
+
 const SearchBar = () => {
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
-    const searchOption = useAppSelector(state => state.productOption.searchOption.option) 
+    const [searchOption, setSearchOption] = useState<SearchOption>("PRODUCT")
     const [open, setOpen] = useState(false)
     const [searchOpen, setSearchOpen] = useState(true)
     const [searchResult, setSearchResult] = useState<SearchResultItem[]>([])
@@ -51,7 +52,7 @@ const SearchBar = () => {
                 }}
                 onFocus={() => setSearchOpen(true)}
                 onBlur={() => {
-                    setTimeout(() => setSearchOpen(false), 100)
+                    setTimeout(() => setSearchOpen(false), 300)
                 }}
                 value={searchValue}
                 className='pl-3 text-sm outline-none w-[320px] h-[30px]'
@@ -69,13 +70,13 @@ const SearchBar = () => {
                 {open ? 
                 <ul className='absolute top-[40px] right-0 rounded-sm bg-slate-50 z-30 border border-slate-30 list-none'>
                     <li 
-                        onClick={(e) => dispatch(searchOptionSelected('PRODUCT'))}
+                        onClick={() => {setSearchOption("PRODUCT")}}
                         className='hover:bg-slate-200 px-2 py-1'
                     >  
                         Sản phẩm
                     </li>   
                     <li 
-                        onClick={(e) => dispatch(searchOptionSelected('AUTHOR'))}
+                        onClick={() => {setSearchOption("AUTHOR")}}
                         className='hover:bg-slate-200 px-2 py-1'
                     >
                         Tác giả

@@ -1,19 +1,31 @@
 import { useRef } from 'react'
 import { BsFacebook } from 'react-icons/bs'
 import { FcGoogle } from 'react-icons/fc'
-import { getUser } from '../lib/axios/user'
+import { authenticateUser } from '../lib/axios/user'
+import { userLoggedIn } from '../redux/slices/userSlice'
+import { useAppDispatch } from '../hooks/hook'
+import { useNavigate } from 'react-router-dom'
 
+type loginFormProps = {
+    toggleOpen : () => void
+}
 
-
-const LoginForm = () => {
+const LoginForm = ({toggleOpen}: loginFormProps) => {
+    const navigate = useNavigate()
+    const dispatch = useAppDispatch()
     const userRef = useRef<HTMLInputElement>(null)
     const passwordRef = useRef<HTMLInputElement>(null)
 
     async function handleSubmit(e : React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         if(userRef.current != null && passwordRef.current != null) {
-            let res = await getUser(userRef.current.value, passwordRef.current.value)
-            console.log(res)
+            await authenticateUser(userRef.current.value, passwordRef.current.value)
+                    .then(res => {
+                        dispatch(userLoggedIn(res))
+                        toggleOpen()
+                        navigate('/product')
+                    }) 
+                    .catch(err => console.log("Unauthorized!"))
         }
     }
 

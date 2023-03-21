@@ -59,13 +59,16 @@ const ProductItemDetail = () => {
                 </div>
                 <div className='my-3 w-full h-[1px] bg-gray-200'></div>
                 <div>
+                    {product?.coupons.map((coupon, i) => {return (
                     <div 
                         className=
                             'px-2 py-1 border border-sky-600 text-sky-600 font-semibold w-fit rounded-md'>
-                        Giảm 15k
+                        
+                        Giảm {coupon} k
                     </div>
+                    )})}
                 </div>
-                <div className='my-3 w-full h-[1px] bg-gray-200'></div>
+                <div className='my-3 w-full h-[0.5px] bg-gray-200'></div>
 
                 <div className='my-2'>
                     <p>Số lượng</p>
