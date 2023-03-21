@@ -26,16 +26,16 @@ export function isListOption(op: RangeOption | ListOption): op is ListOption {
 
 
 
-export type SearchOption = {
-    name: string,
-    author: string,
-    option: 'AUTHOR' | 'PRODUCT'
+export type ProductQueryOption = {
+    filterOptions: FilterCategory[] 
+    sellerId: string | undefined
 }
 
-type Seller = {name: string}
-
-export type ProductQueryOption = {
-    searchOption: SearchOption,
-    filterOptions: FilterCategory[] 
-    sellerOption: Seller
+export type filterValue = {
+    title: string,
+    value: {
+        gte: number | undefined,
+        lte: number | undefined, 
+        in: string[] | undefined
+    }
 }

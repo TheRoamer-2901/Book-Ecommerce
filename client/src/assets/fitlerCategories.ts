@@ -1,26 +1,26 @@
-import { FilterCategory, SearchOption } from "../types/Filter"
+import { FilterCategory } from "../types/Filter"
 
 export const filterInitOptions : FilterCategory[] = [
     {
         title: "Giá",
         options: [
             {
-                value: [0, 100],
+                value: [0, 100000],
                 description: "Dưới 100k",
                 selected: false
             },
             {
-                value: [100, 500],
+                value: [100000, 500000],
                 description: "100k-500k",
                 selected: false
             },
             {
-                value: [500, 1000],
+                value: [500000, 1000000],
                 description: "500k-1000k",
                 selected: false
             },
             {
-                value: [10000, undefined],
+                value: [1000000, undefined],
                 description: "500k-1000k",
                 selected: false
             }
@@ -73,12 +73,6 @@ export const filterInitOptions : FilterCategory[] = [
     }
 ]
 
-export const searchInitOption : SearchOption = {
-    name: "",
-    author: "",
-    option: "AUTHOR"
-}
 
-export const sellerInitOption = {
-    name: ""
-}
+
+export const sellerInitId = undefined

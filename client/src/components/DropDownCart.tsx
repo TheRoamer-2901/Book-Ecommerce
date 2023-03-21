@@ -5,14 +5,14 @@ import {
     AiOutlineMinus, 
     AiOutlineClose  
 } from "react-icons/ai";
-import { BsTrashFill } from "react-icons/bs";
-import { Link } from "react-router-dom";
-import { useAppSelector, useAppDispatch } from "../hooks/hook";
 import {
     productAdded,
     productReduced,
     productRemoved
 } from "../redux/slices/cartSlice"
+import { BsTrashFill } from "react-icons/bs";
+import { Link } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from "../hooks/hook";
 import { CartItem } from "../types/Product";
 import { getDiscountPrice } from "../utils/product";
 
@@ -101,7 +101,7 @@ const DropDownCart = () => {
                 className='relative rounded-full px-1 py-1 bg-white border border-white hover:bg-slate-100 hover:border-slate-200'>
                 <AiOutlineShoppingCart 
                     onClick={() => {setOpen(prev => !prev)}}
-                    className='text-sky-400 text-xl'
+                    className='text-sky-600 text-xl'
                 />
                 {cart.items.length > 0 && 
                     <span className="text-center text-xs font-medium text-white bg-red-500 w-[16px] h-[16px] rounded-full absolute -top-[8px] -right-[8px]">

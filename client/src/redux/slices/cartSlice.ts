@@ -16,7 +16,7 @@ const cartSlice = createSlice({
                     return item
                 } else{ // found added item as old item
                     newItem = false
-                    return {...item, quantity: item.quantity + action.payload.quantity}
+                    return {...item, quantity: item.quantity + action.payload.quantity, selected: action.payload.selected}
                 }
             })
             if(newItem) {
@@ -24,18 +24,21 @@ const cartSlice = createSlice({
             }
         },
         productReduced: (state, action) => {
-            state.items.forEach((item, index) => {
-                if(item.id === action.payload.id && item.quantity > 1) {
-                    item.quantity = item.quantity-1;
-                }
-                if(item.id === action.payload.id && item.quantity == 1) {
-                    state.items.splice(index, 1)
-                }
-
-            })          
+            state.items = state.items
+                            .map(item => item.id === action.payload.id ? {...item, quantity: item.quantity-1} : item)
+                            .filter(item => item.quantity > 0)
+    
         },
         productRemoved: (state, action) => {
             state.items = state.items.filter(item => item.id !== action.payload)
+        },
+        itemSelected: (state, action) => {
+            state.items = state.items.map(item => item.id === action.payload.id ? {...item, selected: !item.selected} : item)
+            console.log(state.items);
+            
+        },
+        couponApplied: (state, action) => {
+            state.items = state.items.map(item => item.id === action.payload.id ? {...item, appliedCouponValue: action.payload.appliedcoupon} : item)
         }
     }
 })
@@ -43,7 +46,9 @@ const cartSlice = createSlice({
 export const { 
     productAdded,
     productReduced,
-    productRemoved
+    productRemoved,
+    itemSelected,
+    couponApplied
 } = cartSlice.actions
 
 export default cartSlice.reducer

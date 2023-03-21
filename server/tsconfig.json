@@ -8,6 +8,10 @@
         "module": "ESNext",
         "moduleResolution": "Node"
     },
+    "include": [
+        "server.ts",
+        "./routes/**{.ts, .js}",
+    ],
     "ts-node": {
         "esm": true
     }

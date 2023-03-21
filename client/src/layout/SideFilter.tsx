@@ -1,11 +1,10 @@
-import { useState } from 'react'
 import { ImStarFull } from 'react-icons/im'
 import { isRangeOption, RangeOption, ListOption, FilterCategory } from '../types/Filter'
+import { getSelectedFilter } from '../redux/slices/productOption'
 import { filterApplied } from '../redux/slices/productOption'
 import { useAppSelector, useAppDispatch } from '../hooks/hook'
 
 const FilterOption = ({title, options, type} : FilterCategory ) => {
-    const [ selected, setSelected ] = useState<number[]>([])
     const dispatch = useAppDispatch()
     return (
         <div className='mb-1 px-2 py-1'>

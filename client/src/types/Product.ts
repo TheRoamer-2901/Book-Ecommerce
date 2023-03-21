@@ -4,9 +4,16 @@ export type Product = {
     author: string,
     img: string,
     price: number,
+    quantity: number
     discountRate: number
+    genres: string[],
+    coupons: number[]
 }
 
-export type CartItem = Product & { quantity: number }
+export type CartItem = Product & {
+    selected: boolean,
+    quantity: number,
+    appliedCouponValue: number
+}
 
 

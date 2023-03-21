@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ProductQueryOption } from "../../types/Filter";
-import { filterInitOptions, searchInitOption, sellerInitOption } from "../../assets/fitlerCategories";
+import { ProductQueryOption, filterValue, isListOption, isRangeOption } from "../../types/Filter";
+import { filterInitOptions, sellerInitId } from "../../assets/fitlerCategories";
+import { useAppSelector } from "../../hooks/hook";
+import { formatCategoryTitle } from "../../utils/product";
 
 const initialState : ProductQueryOption = {
-    searchOption: searchInitOption,
     filterOptions: filterInitOptions,
-    sellerOption: sellerInitOption
+    sellerId: sellerInitId
 }
 
 const productOption = createSlice ({
@@ -38,18 +39,39 @@ const productOption = createSlice ({
                 return category
             })
         },
-        searchOptionSelected: (state, action) => {            
-            state.searchOption.option = action.payload
-        },
         filterCleared: (state) => {
             state.filterOptions = filterInitOptions
         }
     }
 })
 
+
+export function getSelectedFilter() {
+    let filterOptions : filterValue[] = []
+    useAppSelector(state => {
+        state.productOption.filterOptions.forEach(category => {
+            let option : filterValue = {title: formatCategoryTitle(category.title)!, value: {gte: undefined, lte: undefined, in: undefined}}
+            let empty = true
+            for(let op of category.options) {
+                if(op.selected && isRangeOption(op)) {
+                    option.value.gte = op.value[0]
+                    option.value.lte = op.value[1] 
+                    empty = false
+                }
+                if(op.selected && isListOption(op)) {
+                    if(option.value.in == undefined) option.value.in = []
+                    option.value.in.push(op.value)
+                    empty = false
+                }
+            }
+            if(!empty) filterOptions = [option, ...filterOptions]
+        })        
+    })
+    return filterOptions
+}
+
 export const {
     filterApplied,
-    searchOptionSelected,
     filterCleared
 } = productOption.actions
 

@@ -1,7 +1,7 @@
 import { makeRequest } from "./request";
 
-export function getUser(username : string, password: string) {
-    return makeRequest('/user', {
+export function authenticateUser(username : string, password: string) {
+    return makeRequest('/auth/login', {
         method: 'get',
         params: {
             username: username, 
@@ -11,7 +11,7 @@ export function getUser(username : string, password: string) {
 }
 
 export function createUser(username: string, password: string) {
-    return makeRequest('/user', {
+    return makeRequest('/auth/signup', {
         method: 'post',
         params: {
             username: username,

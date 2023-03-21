@@ -13,9 +13,9 @@ const ProductItemDetail = () => {
     const [quantity, setQuantity] = useState<number>(0)
     const [product, setProduct] = useState<Product | undefined>()
 
-    function addToCart(product: Product | undefined, quantity: number) {
-        if(quantity > 0) {
-            dispatch(productAdded({...product, quantity: quantity}))
+    function addToCart(product: Product | undefined, quantity: number, selected: boolean = false) {
+        if(quantity > 0) {            
+            dispatch(productAdded({...product, quantity: quantity, selected: selected}))
         }
     }
 
@@ -34,7 +34,7 @@ const ProductItemDetail = () => {
             </div>
             <div className="px-3 py-4 border-l w-[550px]">
                 <h4 className="font-semibold text-xl">{product?.name}</h4>
-                <div>Tác giả: <span className="text-sky-400 font-medium">{product?.author}</span></div>
+                <div>Tác giả: <span className="text-indigo-500 font-medium">{product?.author}</span></div>
                 <div className="flex items-center gap-2.5">
                     <span className='flex'>
                         <AiOutlineStar className="text-amber-300"/>
@@ -58,11 +58,11 @@ const ProductItemDetail = () => {
                     </p>
                 </div>
                 <div className='my-3 w-full h-[1px] bg-gray-200'></div>
-                <div>
+                <div className='flex items-center flex-wrap gap-2'>
                     {product?.coupons.map((coupon, i) => {return (
                     <div 
-                        className=
-                            'px-2 py-1 border border-sky-600 text-sky-600 font-semibold w-fit rounded-md'>
+                        className='cursor-pointer px-2 py-1 border border-sky-600 text-sky-600 font-semibold w-fit rounded-md'
+                        >
                         
                         Giảm {coupon} k
                     </div>
@@ -89,7 +89,7 @@ const ProductItemDetail = () => {
                     </div>
                     <button 
                         onClick={() => {addToCart(product, quantity)}}
-                        className="flex items-center rounded-md mt-5 px-[10px] py-[10px]  text-sky-400 border border-sky-600"
+                        className="flex items-center rounded-md mt-5 px-[10px] py-[10px]  text-sky-600 border border-sky-600"
                     >
                         <BsCartPlus className="text-lg font-semibold"/>
                         <span className="ml-2 font-semibold">Thêm vào giỏ hàng</span>

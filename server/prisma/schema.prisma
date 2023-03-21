@@ -7,12 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Seller {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  name     String?
-  products Product[]
-}
-
 model Product {
   id           String     @id @default(auto()) @map("_id") @db.ObjectId
   name         String?
@@ -20,20 +14,25 @@ model Product {
   img          String?
   price        Int?
   discountRate Int?
-  seller       Seller?    @relation(fields: [sellerId], references: [id])
+  rating       Int?
+  quantity     Int
+  seller       User?      @relation(fields: [sellerId], references: [id])
   sellerId     String?    @db.ObjectId
   cartItem     CartItem[]
   comments     Comment[]
+  genres       String[]
+  coupons      Int[]
 }
 
 model User {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
   name     String
   password String
   email    String?
   phone    String?
   role     String[]
   cart     Cart?
+  Product  Product[]
 }
 
 model Cart {
