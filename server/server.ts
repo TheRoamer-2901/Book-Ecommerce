@@ -1,14 +1,18 @@
+import * as dotenv from 'dotenv' 
+dotenv.config()
 import express from 'express';
 import cors from 'cors';
+import sgMail from '@sendgrid/mail'
 import { PrismaClient } from '@prisma/client';
 
 export const prisma = new PrismaClient()
 
 const app = express()
 
+sgMail.setApiKey(process.env.SENGRID_KEY!)
+
 const corsOptions = {
   origin: 'http://localhost:8000',
-  
 }
 
 
@@ -91,6 +95,16 @@ app.post('auth/signup', async (req, res) => {
 })
 
 
+
+app.post('/mail/send', async (req, res) => {
+  const mailContent = req.body
+  await sgMail
+        .send(mailContent)
+        .then(res => console.log(res))
+        .catch(err => console.error(err))
+
+  res.json("Mail send")
+})
 
 app.get('/product', async (req, res) => {
   

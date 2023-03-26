@@ -1,14 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { useAppSelector } from "../../hooks/hook";
+import { AuthUser } from "../../types/User";
 
-type AuthUser = {
-    id: string
-    name: string,
-    email: string,
-    role: string[]
-}
 
-const initialState : {authUser: AuthUser | undefined}= {
+const initialState : {authUser: AuthUser | undefined} = {
     authUser: undefined
 }
 

@@ -9,7 +9,7 @@ const UserControl = () => {
     <ul className={`absolute top-[40px] right-0 bg-red-200] w-[120px]
       list-none font-semibold border rounded-sm border-sky-600 text-sky-600 hover:bg-slate-200}`}>
       <li className="bg-white px-2 py-1 hover:bg-slate-200 text-center">
-        <Link to='/'>
+        <Link to='/user/profile'>
           Tài khoản
         </Link>
       </li>

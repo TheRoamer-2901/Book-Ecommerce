@@ -12,6 +12,7 @@ module.exports = {
         'fit': 'fit-content'
       },
       gridTemplateColumns: {
+        'checkout': '1fr 1.5fr 1fr 1fr 1fr',
         'cart': '30px 1fr 1.5fr 1fr 1fr 1fr',
         'fill': 'repeat(auto-fill, minmax(280px, 1fr))'
       }
