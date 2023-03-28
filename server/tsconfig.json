@@ -6,7 +6,8 @@
         "lib": ["esnext"],
         "strict": true,
         "module": "ESNext",
-        "moduleResolution": "nodenext"
+        "moduleResolution": "nodenext",
+        "noImplicitAny": false
     },
     "include": [
         "server.ts",

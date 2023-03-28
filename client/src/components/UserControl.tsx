@@ -1,9 +1,11 @@
 import { FiLogOut } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
-import { useAppDispatch } from '../hooks/hook'
+import { useAppDispatch, useAppSelector } from '../hooks/hook'
 import { userLoggedOut } from '../redux/slices/userSlice'
+import { logUserOut } from '../lib/axios/user'
 
 const UserControl = () => {
+  const authUserId = useAppSelector(state => state.user.authUser!.id)
   const dispatch = useAppDispatch()
   return (
     <ul className={`absolute top-[40px] right-0 bg-red-200] w-[120px]
@@ -15,8 +17,12 @@ const UserControl = () => {
       </li>
       <li 
       className='text-red-500 px-2 py-1 cursor-pointer flex items-center gap-1 bg-white hover:bg-slate-200 text-center'
-        onClick={(e) => {
-          dispatch(userLoggedOut())
+        onClick={async (e) => {
+          await(logUserOut(authUserId))
+          .then((res) => {
+            console.log(res)
+            dispatch(userLoggedOut())
+          })
         }}
       >
         <span>

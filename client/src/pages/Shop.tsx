@@ -5,13 +5,14 @@ import { Product as productProps } from "../types/Product"
 import SideFilter from '../layout/SideFilter'
 import AppliedFilterOption from '../components/FilterOption'
 import ShopProductItem from "../components/ShopProductItem"
+import { useAppSelector } from "../hooks/hook"
 
 const Shop = () => {
   const {id : sellerId}  = useParams<string>()
-  
+  const authUser = useAppSelector(state => state.user.authUser)
   const {data : products, loading} = useAsync(() => {
-    return getProductList()
-  }, [sellerId])
+    return getProductList(authUser?.id, authUser?.token)
+  }, [authUser])
 
   return (
     <div className="flex gap-4">

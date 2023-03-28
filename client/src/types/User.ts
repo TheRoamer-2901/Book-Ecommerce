@@ -3,5 +3,6 @@ export type AuthUser = {
     name: string,
     email: string,
     phone: string,
-    role: string[]
+    role: string[],
+    token: string,
 }

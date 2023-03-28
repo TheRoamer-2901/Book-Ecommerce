@@ -25,14 +25,15 @@ model Product {
 }
 
 model User {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  password String
-  email    String?
-  phone    String?
-  role     String[]
-  cart     Cart?
-  Product  Product[]
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  password     String
+  email        String?
+  phone        String?
+  role         String[]
+  refreshToken String?
+  cart         Cart?
+  Product      Product[]
 }
 
 model Cart {
@@ -43,12 +44,13 @@ model Cart {
 }
 
 model CartItem {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  product   Product @relation(fields: [productId], references: [id])
-  quantity  Int
-  cart      Cart?   @relation(fields: [cartId], references: [id])
-  cartId    String? @db.ObjectId
-  productId String  @db.ObjectId
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
+  product     Product          @relation(fields: [productId], references: [id])
+  quantity    Int
+  cart        Cart?            @relation(fields: [cartId], references: [id])
+  cartId      String?          @db.ObjectId
+  productId   String           @db.ObjectId
+  deliveryLog DeliveryStatus[]
 }
 
 model Comment {
@@ -57,4 +59,13 @@ model Comment {
   msg       String
   Product   Product? @relation(fields: [productId], references: [id])
   productId String?  @db.ObjectId
+}
+
+model DeliveryStatus {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  date        DateTime
+  state       String
+  description String
+  CartItem    CartItem? @relation(fields: [cartItemId], references: [id])
+  cartItemId  String?   @db.ObjectId
 }

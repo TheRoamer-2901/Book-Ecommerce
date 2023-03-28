@@ -10,6 +10,15 @@ export function authenticateUser(username : string, password: string) {
     })
 }
 
+export function logUserOut(userId: string) {
+    return makeRequest('/auth/logout', {
+        method: 'post',
+        data: {
+            uid: userId
+        }
+    })
+}
+
 export function createUser(username: string, password: string) {
     return makeRequest('/auth/signup', {
         method: 'post',
