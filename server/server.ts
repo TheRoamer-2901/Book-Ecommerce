@@ -7,6 +7,7 @@ import { PrismaClient } from '@prisma/client';
 import authRouter from './routes/auth.js';
 import mailRouter from './routes/mail.js';
 import producRouter from './routes/product.js';
+import userRouter from './routes/user.js'
 
 import { authenticateToken } from './middleware/authenticateToken.js'
 
@@ -29,6 +30,8 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.use('/auth', authRouter)
+
+app.use('/user', userRouter)
 
 app.use('/mail', mailRouter)
 

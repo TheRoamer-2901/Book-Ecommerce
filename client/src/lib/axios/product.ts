@@ -18,7 +18,6 @@ export function getProductList(sellerId : string = "", token: string = "") {
     let route = sellerId !== "" ? `seller/${sellerId}/product` : '/product' 
     return makeRequest(route, {
         method: 'get',
-        withCredentials: true,
         headers: {'authorization': 'Bearer ' + token}
     })
 }

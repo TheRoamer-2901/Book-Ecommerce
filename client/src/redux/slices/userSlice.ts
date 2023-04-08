@@ -3,8 +3,15 @@ import { useAppSelector } from "../../hooks/hook";
 import { AuthUser } from "../../types/User";
 
 
-const initialState : {authUser: AuthUser | undefined} = {
-    authUser: undefined
+const initialState : {authUser: AuthUser} = {
+    authUser: {
+        id: "",
+        name: "",
+        email: "",
+        phone: "",
+        role: [],
+        token: "invalid token",
+    }
 }
 
 const userSlice = createSlice({
@@ -15,7 +22,10 @@ const userSlice = createSlice({
             state.authUser = action.payload
         },
         userLoggedOut: (state) => {            
-            state.authUser = undefined
+            state.authUser = initialState.authUser
+        },
+        userTokenRenewed: (state, action) => {
+            state.authUser = action.payload
         }
     }
 })
@@ -26,7 +36,8 @@ export function getAuthUser() {
 
 export const {
     userLoggedIn,
-    userLoggedOut
+    userLoggedOut,
+    userTokenRenewed
 } = userSlice.actions
 
 export default userSlice.reducer

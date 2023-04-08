@@ -6,7 +6,8 @@ export function authenticateUser(username : string, password: string) {
         params: {
             username: username, 
             password: password
-        }
+        },
+        withCredentials: true
     })
 }
 
@@ -26,5 +27,20 @@ export function createUser(username: string, password: string) {
             username: username,
             password: password
         }
+    })
+}
+
+export function getUserByAccessToken(token : string | undefined) {
+    return makeRequest('user/token', {
+        method: 'get',
+        headers: {
+            'authorization': 'Bearer ' + token
+        }
+    })
+}
+
+export function renewUserAccessToken() {
+    return makeRequest('auth/refreshToken', {
+        method: 'get'
     })
 }

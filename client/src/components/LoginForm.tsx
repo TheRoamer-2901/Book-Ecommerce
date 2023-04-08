@@ -20,8 +20,8 @@ const LoginForm = ({toggleOpen}: loginFormProps) => {
         e.preventDefault()
         if(userRef.current != null && passwordRef.current != null) {
             await authenticateUser(userRef.current.value, passwordRef.current.value)
-                    .then(res => {                                                
-                        dispatch(userLoggedIn(res))
+                    .then(user => {         
+                        dispatch(userLoggedIn(user))
                         toggleOpen()
                         navigate('/product')
                     }) 

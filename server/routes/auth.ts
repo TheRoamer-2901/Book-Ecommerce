@@ -23,7 +23,7 @@ router.get('/login', async (req, res) => {
     }
   })
   if(!user) res.sendStatus(401)
-    else{
+  else{
     const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET as Secret, { expiresIn: '10m' })
     const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET as Secret, { expiresIn: '1d'})
     await prisma.user.update({
@@ -34,7 +34,7 @@ router.get('/login', async (req, res) => {
         refreshToken: refreshToken
       }
     })
-    res.cookie('jwt', refreshToken, {httpOnly: true, maxAge: 24*60*60*1000})
+    res.cookie('jwt', refreshToken, {httpOnly: true, maxAge: 24*60*60*1000, sameSite: 'none', secure: true})    
     res.json({...user, token: accessToken})
   }
 })
@@ -82,26 +82,33 @@ router.post('/logout', async (req, res) => {
       refreshToken: ""
     }
   })
+  
   res.clearCookie('jwt', { httpOnly: true})
   res.sendStatus(204)
 })
 
 router.get('/refreshToken', async (req, res) => {
-  const refreshToken = req.cookies.jwt
+  const cookies = req.cookies  
   
-  if (refreshToken == null) res.sendStatus(401)
+  if (!cookies) res.sendStatus(401)
+  
+  const refreshToken = cookies.jwt
   const user = await prisma.user.findFirst({
     where: {
       refreshToken: refreshToken
     }
   })
   if(user == null) res.sendStatus((403))
-  let newAccessToken;
+  
+  let userWithNewAccessToken = {};
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as Secret,  (err, user) => {
-    if(err) res.writeHead(403)
-    newAccessToken = jwt.sign(user as JwtPayload, process.env.ACCESS_TOKEN_SECRET as Secret, {expiresIn: '10m'})
-  })
-  res.send(newAccessToken)
+    if(err) res.sendStatus(403)
+    delete user.iat
+    delete user.exp
+    let newAccessToken = jwt.sign(user as JwtPayload, process.env.ACCESS_TOKEN_SECRET as Secret, {expiresIn: '10m'})
+    userWithNewAccessToken = {...user, token: newAccessToken}
+  })  
+  res.json(userWithNewAccessToken)
 })
 
 export default router

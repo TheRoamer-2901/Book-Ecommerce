@@ -19,12 +19,12 @@ const AuthenFormControl = () => {
   }
   return (
     <div className="relative">
-      {!user 
+      {user.name === ""
       ? <Button content="Đăng nhập" onCLickFunc={toggleOpen}/>
       : <Button content={user.name} onCLickFunc={toggleOpen}/>
       }
 
-      {open && !user &&
+      {open && !user.name &&
         <div 
           className="absolute right[100px] rounded-md bg-gray-100 px-3 py-3 top-[150px] right-[150px] z-30  w-[400px] h-[380px]"
         >
@@ -40,7 +40,7 @@ const AuthenFormControl = () => {
 
         </div>
       }
-      {open && user && <UserControl />}
+      {open && user.name && <UserControl />}
     </div>
   )
 }
