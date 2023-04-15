@@ -9,7 +9,9 @@ import {
     productReduced,
     productRemoved,
     itemSelected,
-    couponApplied
+    couponApplied,
+    updateCartItemQuantityToDB,
+    deleteCartItemFromDB
 } from "../redux/slices/cartSlice"
 import { BsTrashFill } from "react-icons/bs";
 import { useAppSelector, useAppDispatch } from "../hooks/hook";
@@ -22,6 +24,7 @@ type cartProps = {
 }
 
 const Item = (props : CartItem) => {
+    const authUser = useAppSelector(state => state.user.authUser)
     const [open, setOpen] = useState<boolean>(false)
     const dispatch = useAppDispatch()
 
@@ -37,17 +40,17 @@ const Item = (props : CartItem) => {
                         type="checkbox" 
                         className="outline-none"
                         checked={props.selected}
-                        onChange={() => dispatch(itemSelected(props))}
+                        onChange={() => dispatch(itemSelected({product: props.product}))}
                     />
                 </div>
                 <div className="w-[120px] h-[150px] rounded-md overflow-hidden border border-gray-200">
                     <img 
                         className="w-full h-full object-cover"
-                        src={props.img}
+                        src={props.product.img}
                     />
                 </div>
                 <div className="w-[350px] ">
-                    {props.name}
+                    {props.product.name}
                 </div>
                 <div className="cursor-pointer relative" onClick={() => {toggleOpen()}}>
                     {props.appliedCouponValue > 0 
@@ -55,11 +58,16 @@ const Item = (props : CartItem) => {
                     : <p className="font-semibold text-base text-red-500">Chưa áp dụng mã giảm giá</p>}
                     {open ?                     
                     <ul className="rounded-md overflow-hidden absolute border  border-sky-600 font-semibold top-[30px] left-0">
-                    {props.coupons.length > 0 
-                    ?  props.coupons.map((coupon, i) => {
+                    {props.product.coupons.length > 0 
+                    ?  props.product.coupons.map((coupon, i) => {
                         return (
                             <li
-                            onClick={() => {dispatch(couponApplied({...props, appliedcoupon: coupon}))}}
+                            onClick={() => {dispatch(couponApplied(
+                                {
+                                    product: props.product,
+                                    appliedCoupon: coupon
+                                }
+                            ))}}
                              className="w-[50px] px-2 py-1 hover:bg-sky-100 bg-white text-sky-600"key={i}
                             >
                                 {coupon}k
@@ -72,15 +80,45 @@ const Item = (props : CartItem) => {
                 </div>
                 <div className="mt-1 flex items-center rounded-md border border-slate-200 h-fit w-fit">
                   <button 
-                      onClick={() => dispatch(productReduced(props))}
+                    onClick={() => {
+                        if(props.quantity > 1) {
+                            if (authUser.name !== "") {
+                                dispatch(updateCartItemQuantityToDB({
+                                    option: 'decrease',
+                                    body: {
+                                        itemId: props.id,
+                                        quantity: 1
+                                    }
+                                }))
+                            } else{
+                                dispatch(productReduced({product: props}))
+                            }
+                        } else {
+                            if (authUser.name !== "") {
+                                dispatch(deleteCartItemFromDB({itemId: props.id}))
+                            } else{
+                                dispatch(productRemoved({product: props}))
+                            }
+                        }
+                      }}
                       className="p-2 border-r hover:bg-slate-100 border-slate-200"
                   >
                       <AiOutlineMinus />
                   </button>
                   <input type="text" value={props.quantity} className="h-full w-[40px] text-center outline-none"/>
                   <button 
-                      onClick={(e) => {
-                        dispatch(productAdded({id: props.id, quantity: 1, selected: props.selected}))
+                    onClick={(e) => {
+                        if(authUser.name !== "") {
+                            dispatch(updateCartItemQuantityToDB({
+                                option: 'increase',
+                                body: {
+                                    itemId: props.id,
+                                    quantity: 1
+                                }
+                            }))                                    
+                        } else{
+                            dispatch(productAdded({...props.product, quantity: 1}))
+                        }                    
                     }}
                       className="p-2 border-l hover:bg-slate-100 border-slate-200"
                   >
@@ -89,10 +127,16 @@ const Item = (props : CartItem) => {
                 </div>
                 <div className="flex items-center">
                   <span className="mr-2 text-sky-600 font-semibold ">
-                      {getDiscountPrice(props.price, props.discountRate, props.quantity, props.appliedCouponValue)}đ
+                      {getDiscountPrice(props.product.price, props.product.discountRate, props.quantity, props.appliedCouponValue)}đ
                   </span>
                   <BsTrashFill 
-                      onClick={() => {dispatch(productRemoved(props.id))}}
+                      onClick={() => {
+                        if(authUser.name !== "") {
+                            dispatch(deleteCartItemFromDB({itemId: props.id}))
+                        } else {
+                            dispatch(productRemoved(props.id))
+                        }
+                      }}
                       className="text-sm font-semibold text-red-600 cursor-pointer"
                   />
                 </div>

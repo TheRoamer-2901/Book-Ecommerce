@@ -2,20 +2,45 @@ import { useState, useEffect } from 'react'
 import { AiOutlineMinus, AiOutlinePlus, AiOutlineStar } from 'react-icons/ai'
 import { BsCartPlus } from 'react-icons/bs'
 import { useParams } from 'react-router-dom'
-import { Product } from '../types/Product'
+import { CartItem, Product } from '../types/Product'
 import { productAdded } from '../redux/slices/cartSlice'
-import { useAppDispatch } from '../hooks/hook'
+import { addCartItemToDB, updateCartItemQuantityToDB } from '../redux/slices/cartSlice'
+import { useAppSelector, useAppDispatch } from '../hooks/hook'
 import { getDiscountPrice } from '../utils/product.js'
 
 const ProductItemDetail = () => {
     const { id } = useParams()
     const dispatch = useAppDispatch()
+    const authUser = useAppSelector(state => state.user.authUser)
+    const cartItems = useAppSelector(state => state.cart.items)
     const [quantity, setQuantity] = useState<number>(0)
     const [product, setProduct] = useState<Product | undefined>()
 
-    function addToCart(product: Product | undefined, quantity: number, selected: boolean = false) {
+    function getCartItemId(cartItems : CartItem[], productId : string) : string | undefined {        
+        const cartItem = cartItems.find(item => item.product?.id === productId)
+        return cartItem ? cartItem.id : undefined
+    }
+
+    async function addToCart(product: Product | undefined, quantity: number, selected: boolean = false) {
         if(quantity > 0) {            
-            dispatch(productAdded({...product, quantity: quantity, selected: selected}))
+            const cartItemId = getCartItemId(cartItems, product!.id)
+            if(authUser.name !== "") {                
+                if(cartItemId) {
+                    dispatch(updateCartItemQuantityToDB({
+                        option: 'increase',
+                        body: {
+                            quantity: quantity, itemId: cartItemId
+                        }
+                    }))
+                } else{
+                    dispatch(addCartItemToDB({product: product, quantity: quantity, userId: authUser.id})).unwrap()
+                }
+            }
+            else {
+                console.log(654321);
+                
+                dispatch(productAdded({product: product, quantity: quantity, selected: selected}))
+            }
         }
     }
 
@@ -24,6 +49,8 @@ const ProductItemDetail = () => {
       .then(res => res.json())
       .then(data => setProduct(data))
     }, [id])
+
+
     return (
         <div className='flex border h-fit border-gray-200 rounded-sm'>
             <div className='h-[500px] w-[350px] overflow-hidden'>

@@ -10,10 +10,18 @@ export type Product = {
     coupons: number[]
 }
 
-export type CartItem = Product & {
+type OrderInfo = {
+    note: string,
+    location: string
+}
+
+export type CartItem = {
+    id : string,
     selected: boolean,
     quantity: number,
+    product: Product
     appliedCouponValue: number
+    orderInfo: OrderInfo
 }
 
 

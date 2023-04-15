@@ -1,22 +1,20 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { 
-    AiOutlinePlus, 
-    AiOutlineMinus,
     AiOutlineDollar 
 } from "react-icons/ai";
 import { FaMoneyBillWaveAlt } from 'react-icons/fa'
 import { HiOutlineLocationMarker } from 'react-icons/hi'
 import {
-    productAdded,
-    productReduced,
-    couponApplied
+    orderInfoUpdated,
 } from "../redux/slices/cartSlice"
 import MoMoIcon from '../assets/momo_icon_square.png';
 import { useAppSelector, useAppDispatch } from "../hooks/hook";
+import { createNewOrderFromCartItem } from "../redux/slices/cartSlice";
 import { CartItem } from "../types/Product";
 import { useNavigate } from 'react-router-dom';
 import { getDiscountPrice, getCheckoutValue } from "../utils/product";
 import { PaymentMethod } from "../types/Payment";
+import LocationSelectionForm from "../components/LocationSelectionForm";
 
 type checkoutProps = {
   checkoutedItems: CartItem[]
@@ -30,67 +28,57 @@ const Item = (props : CartItem) => {
         setOpen(prev => !prev)
     }
 
+    function updateOrderNote(msg: string) {
+      dispatch(orderInfoUpdated({product: props.product, orderInfo: {...props.orderInfo, note: msg}}))
+    }
+
+    function updateLocation(province: string, district: string, ward: string) {
+      const location = `  ${ward},  ${district}, ${province}`
+      dispatch(orderInfoUpdated({product: props.product, orderInfo: {...props.orderInfo, location: location}}))
+    }
+
     return(
         <div className="relative flex items-center flex-col justify-between w-full my-2 border border-slate-300 px-2 py-2">
-            <div className="absolute top-2 right-2 flex items-center h-[20px] cursor-pointer"><span><HiOutlineLocationMarker className="text-black w-[16px] h-[16px]"/> </span>Chọn địa chỉ</div>
+            {open && <LocationSelectionForm closeForm={toggleOpen} updateLocation={updateLocation}/>}
+            <div className="absolute top-2 right-2 flex items-center h-[20px] cursor-pointer" onClick={() => {toggleOpen()}}>
+              <span><HiOutlineLocationMarker className="text-sky-600 w-[20px] h-[20px]"/> </span>
+              {!props.orderInfo.location 
+              ? <span className="italic font-medium text-slate-400">Chọn địa chỉ</span> 
+              : <span className="italic font-medium text-sky-600">{props.orderInfo.location}</span>
+              }
+            </div>
             <div className="grid grid-cols-checkout items-center gap-1">
                 <div className="w-[120px] h-[150px] rounded-md overflow-hidden border border-gray-200">
                     <img 
                         className="w-full h-full object-cover"
-                        src={props.img}
+                        src={props.product.img}
                     />
                 </div>
                 <div className="w-[350px] font-semibold">
-                    {props.name}
+                    {props.product.name}
                 </div>
-                <div className="cursor-pointer relative" onClick={() => {toggleOpen()}}>
+                <div className="cursor-pointer relative" >
                     {props.appliedCouponValue > 0 
                     ? <p className="font-medium text-base text-sky-600">{props.appliedCouponValue}k</p>
                     : <p className="font-semibold text-base text-red-500">Chưa áp dụng mã giảm giá</p>}
-                    {open ?                     
-                    <ul className="rounded-md overflow-hidden absolute border  border-sky-600 font-semibold top-[30px] left-0">
-                    {props.coupons.length > 0 
-                    ?  props.coupons.map((coupon, i) => {
-                        return (
-                            <li
-                            onClick={() => {dispatch(couponApplied({...props, appliedcoupon: coupon}))}}
-                             className="w-[50px] px-2 py-1 hover:bg-sky-100 bg-white text-sky-600"key={i}
-                            >
-                                {coupon}k
-                            </li>)
-                    })
-                    : <li className="w-fit px-2 py-1 hover:bg-gray-100 bg-white">Hiện chưa có mã giảm giá</li>
-                    }
-                    </ul> : null
-                    }
+  
                 </div>
-                <div className="mt-1 flex items-center rounded-md border border-slate-200 h-fit w-fit">
-                  <button 
-                      onClick={() => dispatch(productReduced(props))}
-                      className="p-2 border-r hover:bg-slate-100 border-slate-200"
-                  >
-                      <AiOutlineMinus />
-                  </button>
-                  <input type="text" value={props.quantity} className="h-full w-[40px] text-center outline-none"/>
-                  <button 
-                      onClick={(e) => {
-                        dispatch(productAdded({id: props.id, quantity: 1, selected: props.selected}))
-                    }}
-                      className="p-2 border-l hover:bg-slate-100 border-slate-200"
-                  >
-                      <AiOutlinePlus />
-                  </button>
+                <div className="font-semibold">
+                  {props.quantity}
                 </div>
                 <div className="flex items-center">
                   <span className="mr-2 text-sky-600 font-semibold ">
-                      {getDiscountPrice(props.price, props.discountRate, props.quantity, props.appliedCouponValue)}đ
+                      {getDiscountPrice(props.product.price, props.product.discountRate, props.quantity, props.appliedCouponValue)}đ
                   </span>
-                  <span className="font-normal text-slate-300 line-through">{props.price*props.quantity}đ</span>
+                  <span className="font-normal text-slate-300 line-through">{props.product.price*props.quantity}đ</span>
                 </div>
             </div>
             <div className="mr-auto mt-2 w-2/5">
               <span className="text-base font-semibold">Chi chú cho người bán:</span>
-              <textarea className="w-full h-[50px] p-2 border resize-none font-medium text-sm"></textarea>
+              <textarea className="w-full h-[50px] p-2 border resize-none font-medium text-sm" 
+                onBlur={(e) => updateOrderNote(e.target.value)}
+              >
+              </textarea>
             </div>
       </div>
     )
@@ -115,14 +103,43 @@ const ItemList = ({checkoutedItems} : checkoutProps) => {
 
 const Checkout = () => {
     const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(undefined)
-    const checkoutedItems = useAppSelector((state => {
+    const dispatch = useAppDispatch()
+    const checkoutItems = useAppSelector((state => {
       return state.cart.items.filter(item => item.selected)
     }))
-    const navigate = useNavigate()
-    const totalPrice = getCheckoutValue(checkoutedItems)
+    const authUser = useAppSelector(state => state.user.authUser)
+    const totalPrice = getCheckoutValue(checkoutItems)
+
+    function anyItemLocationIncluded(items : CartItem[]) {
+      return items.some(item => item.orderInfo.location === "")
+    }
+
+    function selectPaymentMethod(newMethod : PaymentMethod) {
+      setPaymentMethod(prevMethod => {
+        if(prevMethod === newMethod) return undefined
+        return newMethod
+      })
+    }
+
     function handleCheckout(e : React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
+        if(anyItemLocationIncluded(checkoutItems)){
+          alert("Vui lòng điền đầy đủ địa chỉ trước khi thanh toán!")
+          return
+        }
+        if(paymentMethod == undefined) {
+          alert("Vui lòng chọn một phương thức thanh toán!")
+          return
+        }
+        if(authUser.name === "") {
+          alert("Vui lòng đăng nhập để thực hiện thanh toán!")
+          return
+        }
+        if(paymentMethod === "MoMo") {
+          alert("Tính năng đang trong quá trình phát triển, vui lòng chọn hình thức thanh toán khác!")
+        }
         if(paymentMethod == "Direct") {
+            dispatch(createNewOrderFromCartItem({items: checkoutItems, userId: authUser.id}))
             alert("Đặt hàng thành công!!")
         }
     }
@@ -130,14 +147,14 @@ const Checkout = () => {
     return (
         <form className="mt-4 border border-slate-300 px-4 py-4 w-full max-w-[1200px]" onSubmit={(e)=>{handleCheckout(e)}}>
             <p className="font-semibold text-xl text-center text-red-600">Thanh toán đơn hàng</p>
-            <ItemList checkoutedItems={checkoutedItems}/> 
+            <ItemList checkoutedItems={checkoutItems}/> 
             <div>
               <p className="text-base text-sky-600 font-semibold">Hình thức thanh toán</p>
               <div className="flex gap-2">
                 <div 
                   className={`border rounded-md px-2 py-2 w-fit flex items-center h-[40px] cursor-pointer `+
                   `${paymentMethod === "Direct" ? "bg-emerald-50 border-emerald-600" : "border-slate-200 hover:bg-emerald-50 hover:border-emerald-600"}`}
-                  onClick={() => {setPaymentMethod("Direct")}}
+                  onClick={() => {selectPaymentMethod("Direct")}}
                 >
                   <FaMoneyBillWaveAlt className="mr-2 text-emerald-600"/>
                   <span className=" text-emerald-600 font-semibold">Trực tiếp khi nhận hàng</span>
@@ -145,7 +162,7 @@ const Checkout = () => {
                 <div 
                  className={`border rounded-md px-2 py-2 w-fit flex items-center h-[40px] cursor-pointer `+
                  `${paymentMethod === "MoMo" ? "border-[#d82d8b] bg-[#ffd6e7]" : "border-slate-200 hover:border-[#d82d8b] hover:bg-[#ffd6e7]"}`}
-                  onClick={() => {setPaymentMethod("MoMo")}}
+                  onClick={() => {selectPaymentMethod("MoMo")}}
                 >
                   <img src={MoMoIcon} className="h-full object-contain mr-2"/> 
                   <span className="text-[#d82d8b] font-semibold">Ví điện tử MoMo</span>

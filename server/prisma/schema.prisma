@@ -34,23 +34,25 @@ model User {
   refreshToken String?
   cart         Cart?
   Product      Product[]
+  Order        Order[]
 }
 
 model Cart {
-  id       String     @id @default(auto()) @map("_id") @db.ObjectId
-  cartItem CartItem[]
-  user     User       @relation(fields: [userId], references: [id])
-  userId   String     @unique @db.ObjectId
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  cartItems CartItem[]
+  user      User       @relation(fields: [userId], references: [id])
+  userId    String     @unique @db.ObjectId
 }
 
 model CartItem {
-  id          String           @id @default(auto()) @map("_id") @db.ObjectId
-  product     Product          @relation(fields: [productId], references: [id])
-  quantity    Int
-  cart        Cart?            @relation(fields: [cartId], references: [id])
-  cartId      String?          @db.ObjectId
-  productId   String           @db.ObjectId
-  deliveryLog DeliveryStatus[]
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+  cart      Cart?   @relation(fields: [cartId], references: [id])
+  cartId    String? @db.ObjectId
+  productId String  @db.ObjectId
+  isOrdered Boolean @default(false)
+  Order     Order?
 }
 
 model Comment {
@@ -61,11 +63,20 @@ model Comment {
   productId String?  @db.ObjectId
 }
 
-model DeliveryStatus {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+model Order {
+  id                 String           @id @default(auto()) @map("_id") @db.ObjectId
+  note               String
+  location           String
+  deliveryLog        deliveryStatus[]
+  cartItem           CartItem         @relation(fields: [cartItemId], references: [id])
+  cartItemId         String           @unique @db.ObjectId
+  appliedCouponValue Int
+  purchaser          User             @relation(fields: [purchaserId], references: [id])
+  purchaserId        String           @db.ObjectId
+}
+
+type deliveryStatus {
   date        DateTime
   state       String
   description String
-  CartItem    CartItem? @relation(fields: [cartItemId], references: [id])
-  cartItemId  String?   @db.ObjectId
 }
