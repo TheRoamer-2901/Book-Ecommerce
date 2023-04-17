@@ -11,6 +11,7 @@ import userRouter from './routes/user.js';
 import cartRouter from './routes/cart.js'
 import orderRouter from './routes/order.js'
 import sellerRouter from './routes/seller.js'
+import searchRouter from './routes/search.js'
 
 import { authenticateToken } from './middleware/authenticateToken.js'
 
@@ -45,30 +46,9 @@ app.use('/cart', cartRouter)
 app.use('/order', orderRouter)
 
 app.use('/seller', sellerRouter)
+
+app.use('/search', searchRouter)
   
-
-
-
-app.get('/productname/:name', async (req, res) => {
-  const {name} = req.params
-  
-  if(!name) res.json([])
-  const productNames = await prisma.product.findMany({
-    where: {
-      name: {
-        contains: name,
-        mode: 'insensitive'
-      }
-    },  
-    select: {
-      id: true,
-      name: true
-    }
-  })
-  
-  res.json(productNames)
-})
-
   
 
 app.listen(3000, () => {

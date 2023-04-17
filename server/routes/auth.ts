@@ -16,6 +16,7 @@ router.get('/login', async (req, res) => {
     select: {
       id: true,
       password: false,
+      img: true,
       name: true,
       email: true,
       phone: true,
@@ -60,6 +61,7 @@ router.post('/signup', async (req, res) => {
       select: {
         id: true,
         password: false,
+        img: true,
         name: true,
         email: true,
         phone: true,

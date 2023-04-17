@@ -15,7 +15,7 @@ const Profile = () => {
       <div className="flex items-center gap-3">
           <div className="w-[120px] h-[120px] rounded-full border border-gray-300 overflow-hidden">
             <img className= "object-cover w-full h-full"
-              src="https://mir-s3-cdn-cf.behance.net/project_modules/fs/7c27c1115380977.604d71f1a7189.png"
+              src={authUser?.img}
             />
           </div>
           <div className="flex flex-col">

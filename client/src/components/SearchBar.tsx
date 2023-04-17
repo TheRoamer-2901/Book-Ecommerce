@@ -4,7 +4,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { useAppSelector, useAppDispatch } from '../hooks/hook';
 import { useDebounce } from '../hooks/useDebounce';
 import { useNavigate } from 'react-router-dom';
-import { getProductByName } from '../lib/axios/product';
+import { getProductByAuthor, getProductByName } from '../lib/axios/product';
 
 type SearchResultItem = {
     id: string
@@ -32,12 +32,18 @@ const SearchBar = () => {
             navigate(`/author/${item.author}`)
         }
         setSearchOpen(false)
+        setSearchValue("")
     }
 
     useDebounce(async () => {
         if(searchValue.trim()){
-            const data = await getProductByName(searchValue.trim())                        
-            setSearchResult(data)
+            if(searchOption === "PRODUCT") {
+                const data = await getProductByName(searchValue.trim())                        
+                setSearchResult(data)
+            } else {
+                const data = await getProductByAuthor(searchValue.trim())                        
+                setSearchResult(data)            
+            }
         } else{
             setSearchResult([])
         }
@@ -57,7 +63,7 @@ const SearchBar = () => {
                 value={searchValue}
                 className='pl-3 text-sm outline-none w-[320px] h-[30px]'
                 type='text' 
-                placeholder={`Tìm theo ${searchOption == 'AUTHOR' ? "Tác giả" : "tên sản phẩm"}...`}
+                placeholder={`Tìm theo ${searchOption == 'AUTHOR' ? "tên tác giả" : "tên sản phẩm"}...`}
             />
             <div 
                 onClick={() => setOpen(prev => !prev)}

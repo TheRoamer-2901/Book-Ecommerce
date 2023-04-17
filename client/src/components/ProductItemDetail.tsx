@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { AiOutlineMinus, AiOutlinePlus, AiOutlineStar } from 'react-icons/ai'
+import { AiOutlineMinus, AiOutlinePlus, AiFillStar } from 'react-icons/ai'
 import { BsCartPlus } from 'react-icons/bs'
 import { useParams } from 'react-router-dom'
 import { CartItem, Product } from '../types/Product'
@@ -64,11 +64,11 @@ const ProductItemDetail = () => {
                 <div><span className='italic font-semibold'>Tác giả:</span> <span className='font-semibold'>{product?.author}</span></div>
                 <div className="flex items-center gap-2.5">
                     <span className='flex'>
-                        <AiOutlineStar className="text-amber-300"/>
-                        <AiOutlineStar className="text-amber-300"/>
-                        <AiOutlineStar className="text-amber-300"/>
-                        <AiOutlineStar className="text-amber-300"/>
-                        <AiOutlineStar className="text-amber-300"/>
+                        <AiFillStar className="text-amber-300"/>
+                        <AiFillStar className="text-amber-300"/>
+                        <AiFillStar className="text-amber-300"/>
+                        <AiFillStar className="text-amber-300"/>
+                        <AiFillStar className="text-amber-300"/>
                     </span>
                     <span className='text-sm text-gray-400'>(Xem 1000 đánh giá)</span>
                     <span className='text-sm text-gray-400'>Đã bán 1000+</span>

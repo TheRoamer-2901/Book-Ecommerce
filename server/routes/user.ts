@@ -6,6 +6,7 @@ const router = express.Router()
 
 router.get('/token', authenticateToken, (req : any, res) => {
     const user = req.user;
+    console.log(user);
     
     res.json(user)
 }) 
@@ -25,7 +26,6 @@ router.post('/update', authenticateToken, async (req : any, res) => {
 
         }
     })
-    console.log("profile: ", updatedUserProfile);
     res.json(updatedUserProfile)    
 })
     

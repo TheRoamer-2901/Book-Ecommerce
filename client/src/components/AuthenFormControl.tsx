@@ -2,6 +2,7 @@ import { useState } from "react"
 import { FormActiveState } from "../types/Form"
 import { useAppSelector } from "../hooks/hook"
 import Button from "./Button"
+import LoginButton from "./LoginButton"
 import FormControl from './FormControl'
 import LoginForm from "./LoginForm"
 import SignupForm from "./SignupForm" 
@@ -17,11 +18,12 @@ const AuthenFormControl = () => {
   function toggleOpen() {
     setOpen(prev => !prev)
   }
+  
   return (
     <div className="relative">
       {user.name === ""
-      ? <Button content="Đăng nhập" onCLickFunc={toggleOpen}/>
-      : <Button img={user.img} content={user.name} onCLickFunc={toggleOpen}/>
+      ? <LoginButton content="Đăng nhập" onCLickFunc={toggleOpen}/>
+      : <Button img={user?.img} content={user.name} onCLickFunc={toggleOpen}/>
       }
 
       {open && !user.name &&

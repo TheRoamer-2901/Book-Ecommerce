@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { AiFillEdit , AiOutlineStar } from 'react-icons/ai'
+import { AiFillEdit , AiFillStar } from 'react-icons/ai'
 import { BsFillTrashFill } from 'react-icons/bs'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Product } from '../types/Product'
@@ -32,11 +32,11 @@ const ProductItemDetail = () => {
                 <p className='font-semibold'><span className='italic'>Tác giả: </span><span className="font-medium">{product?.author}</span></p>
                 <div className="flex items-center gap-2.5">
                     <span className='flex'>
-                        <AiOutlineStar className="text-amber-300"/>
-                        <AiOutlineStar className="text-amber-300"/>
-                        <AiOutlineStar className="text-amber-300"/>
-                        <AiOutlineStar className="text-amber-300"/>
-                        <AiOutlineStar className="text-amber-300"/>
+                        <AiFillStar className="text-amber-300"/>
+                        <AiFillStar className="text-amber-300"/>
+                        <AiFillStar className="text-amber-300"/>
+                        <AiFillStar className="text-amber-300"/>
+                        <AiFillStar className="text-amber-300"/>
                     </span>
                     <span className='text-sm text-gray-400'>(Xem 1000 đánh giá)</span>
                     <span className='text-sm text-gray-400'>Đã bán 1000+</span>
@@ -59,7 +59,7 @@ const ProductItemDetail = () => {
                         className='cursor-pointer px-2 py-1 border border-sky-600 text-sky-600 font-semibold w-fit rounded-md'
                         >
                         
-                        Giảm {coupon} k
+                        Giảm {coupon/1000} k
                     </div>
                     )})}
                 </div>

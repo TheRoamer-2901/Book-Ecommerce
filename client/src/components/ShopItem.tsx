@@ -1,4 +1,4 @@
-import { AiOutlineStar } from "react-icons/ai"
+import { AiFillStar } from "react-icons/ai"
 import { AiOutlineShop } from "react-icons/ai"
 import { AiOutlinePlus } from "react-icons/ai"
 
@@ -17,7 +17,7 @@ const ShopItem = () => {
         <div className="flex items-center justify-center my-2">
             <div className="flex flex-col items-center">
                 <div className="flex items-center font-medium">
-                    4.7/5<span><AiOutlineStar className="ml-1 text-amber-300 "/></span>
+                    4.7/5<span><AiFillStar className="ml-1 text-amber-300 "/></span>
                 </div>
                 <div className="text-xs text-gray-300">5.3tr+</div>
             </div>

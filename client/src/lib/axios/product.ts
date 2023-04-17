@@ -9,8 +9,20 @@ export function getProductById(id : string) {
 }
 
 export function getProductByName(name : string) {
-    return makeRequest(`/productname/${name}`,{
-        method: 'get'
+    return makeRequest(`/search/product/name`,{
+        method: 'get',
+        params: {
+            name: name
+        }
+    })
+}
+
+export function getProductByAuthor(author: string) {
+    return makeRequest(`/search/product/author`,{
+        method: 'get',
+        params: {
+            name: author
+        }    
     })
 }
 
