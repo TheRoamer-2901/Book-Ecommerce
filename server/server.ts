@@ -10,6 +10,7 @@ import producRouter from './routes/product.js';
 import userRouter from './routes/user.js';
 import cartRouter from './routes/cart.js'
 import orderRouter from './routes/order.js'
+import sellerRouter from './routes/seller.js'
 
 import { authenticateToken } from './middleware/authenticateToken.js'
 
@@ -43,18 +44,10 @@ app.use('/cart', cartRouter)
 
 app.use('/order', orderRouter)
 
+app.use('/seller', sellerRouter)
+  
 
 
-app.get('/seller/:id/product', authenticateToken, async (req, res) => {
-  const {id} = req.params
-  const sellerProductlist = await prisma.product.findMany({
-    where: {
-      sellerId: id
-    }
-  })  
-  res.json(sellerProductlist)
-
-}) 
 
 app.get('/productname/:name', async (req, res) => {
   const {name} = req.params

@@ -10,6 +10,17 @@ export type Product = {
     coupons: number[]
 }
 
+export type NewProduct = {
+    name : string,
+    author: string,
+    img: string,
+    price: number,
+    quantity: number
+    discountRate: number
+    genres: string[],
+    coupons: number[]
+}
+
 type OrderInfo = {
     note: string,
     location: string

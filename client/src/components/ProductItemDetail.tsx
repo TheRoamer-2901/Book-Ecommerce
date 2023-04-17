@@ -61,7 +61,7 @@ const ProductItemDetail = () => {
             </div>
             <div className="px-3 py-4 border-l w-[550px]">
                 <h4 className="font-semibold text-xl">{product?.name}</h4>
-                <div>Tác giả: <span className="text-indigo-500 font-medium">{product?.author}</span></div>
+                <div><span className='italic font-semibold'>Tác giả:</span> <span className='font-semibold'>{product?.author}</span></div>
                 <div className="flex items-center gap-2.5">
                     <span className='flex'>
                         <AiOutlineStar className="text-amber-300"/>
@@ -91,14 +91,14 @@ const ProductItemDetail = () => {
                         className='cursor-pointer px-2 py-1 border border-sky-600 text-sky-600 font-semibold w-fit rounded-md'
                         >
                         
-                        Giảm {coupon} k
+                        Giảm {coupon/1000} k
                     </div>
                     )})}
                 </div>
                 <div className='my-3 w-full h-[0.5px] bg-gray-200'></div>
 
                 <div className='my-2'>
-                    <p>Số lượng</p>
+                    <p className='italic font-semibold'>Số lượng: </p>
                     <div className="mt-1 flex items-center rounded-md border border-slate-200 h-fit w-fit">
                         <button 
                             onClick={() => setQuantity(prev => {return prev > 0 ? prev-1 : 0})}
@@ -114,6 +114,16 @@ const ProductItemDetail = () => {
                             <AiOutlinePlus />
                         </button>
                     </div>
+                    <div className='my-3 w-full h-[0.5px] bg-gray-200'></div>
+
+                    <div>
+                        <p className='italic font-semibold'>Thể loại:</p>
+                    </div>
+                        {product?.genres.map((genre, i) => <div className="font-semibold text-sky-600 border border-sky-600 px-2 py-2 w-fit rounded-md" key={i}>
+                            {genre}
+                        </div>)}
+                    <div className='my-3 w-full h-[0.5px] bg-gray-200'></div>
+
                     <button 
                         onClick={() => {addToCart(product, quantity)}}
                         className="flex items-center rounded-md mt-5 px-[10px] py-[10px]  text-sky-600 border border-sky-600"

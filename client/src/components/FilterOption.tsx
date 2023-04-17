@@ -1,6 +1,6 @@
 import { useAppSelector, useAppDispatch } from '../hooks/hook'
 import { isRangeOption, isListOption } from '../types/Filter'
-import { filterApplied, filterCleared } from '../redux/slices/productOption'
+import { filterApplied, filterCleared } from '../redux/slices/filterOptionsSlice'
 import { AiOutlineClose } from 'react-icons/ai'
 
 type ApplyOption = {
@@ -12,7 +12,7 @@ type ApplyOption = {
 const AppliedFilterOption = () => {
     const dispatch = useAppDispatch()
     const appliedOptions : ApplyOption[] = useAppSelector(state => {
-        const categories = state.productOption.filterOptions
+        const categories = state.filterOptions.filterOptions
         let options : ApplyOption[] = []
         for(let category of categories) {
             for(let i=0; i < category.options.length; i++) {

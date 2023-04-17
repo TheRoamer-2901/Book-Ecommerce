@@ -12,23 +12,38 @@ router.get('/', async (req, res) => {
   })
   
 
-router.post('/filter', async (req, res) => {
-  
+router.get('/filter', async (req : {query: {options: any[]}}, res) => {
+    const options = req.query.options
+    console.log(req.query);
+    
     let filterOption : any = {}
 
-    req.body.forEach((op : {title: string, value: any[]})=> {
-        if(Object.keys(op.value).length > 0) {
-        filterOption[op.title] = op.value
+    options.forEach((op : {title: string, value: any})=> {
+        switch(op.title) {
+            case "price":
+                filterOption["price"] = {gte: 0, lte: Number.MAX_VALUE}
+                filterOption["price"].gte = parseInt(op.value.gte)
+                filterOption["price"].lte = parseInt(op.value.lte)
+                break;
+            case "rating":
+                filterOption["rating"] = {gte: 0, lte: Number.MAX_VALUE}
+                filterOption["rating"].gte = parseInt(op.value.gte)
+                filterOption["rating"].lte = parseInt(op.value.lte)
+                break;
+            case "genres":
+                filterOption["genres"] = { hasEvery: op.value.in}
         }
     })
-    console.log(filterOption);
 
 
-    const filterProds = await prisma.product.findMany({
-        where: filterOption
+    const filterProducts = await prisma.product.findMany({
+        where: filterOption,
+        orderBy: {
+            price: "asc"
+        }
     })
 
-    res.json(filterProds)
+    res.json(filterProducts)
 })
 
 router.get('/:id', async (req, res) => {

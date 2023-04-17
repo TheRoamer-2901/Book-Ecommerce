@@ -89,26 +89,31 @@ router.post('/logout', async (req, res) => {
 
 router.get('/refreshToken', async (req, res) => {
   const cookies = req.cookies  
+
+  if (Object.entries(cookies).length == 0) { //no refresh token adhere to cookies
+    res.sendStatus(401)
+  }
+  else{
   
-  if (!cookies) res.sendStatus(401)
-  
-  const refreshToken = cookies.jwt
-  const user = await prisma.user.findFirst({
-    where: {
-      refreshToken: refreshToken
-    }
-  })
-  if(user == null) res.sendStatus((403))
-  
-  let userWithNewAccessToken = {};
-  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as Secret,  (err, user) => {
-    if(err) res.sendStatus(403)
-    delete user.iat
-    delete user.exp
-    let newAccessToken = jwt.sign(user as JwtPayload, process.env.ACCESS_TOKEN_SECRET as Secret, {expiresIn: '10m'})
-    userWithNewAccessToken = {...user, token: newAccessToken}
-  })  
-  res.json(userWithNewAccessToken)
+    const refreshToken = cookies.jwt
+    const user = await prisma.user.findFirst({
+      where: {
+        refreshToken: refreshToken
+      }
+    })
+    if(user == null) res.sendStatus((403))
+    
+    let userWithNewAccessToken = {};
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as Secret,  (err, user) => {
+      if(err) res.sendStatus(403)
+      delete user.iat
+      delete user.exp
+      let newAccessToken = jwt.sign(user as JwtPayload, process.env.ACCESS_TOKEN_SECRET as Secret, {expiresIn: '10m'})
+      userWithNewAccessToken = {...user, token: newAccessToken}
+    })  
+    res.json(userWithNewAccessToken)
+  }
+
 })
 
 export default router

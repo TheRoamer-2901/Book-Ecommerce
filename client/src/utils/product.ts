@@ -1,7 +1,7 @@
 import { CartItem } from "../types/Product"
 
 export function getDiscountPrice(price : number, discountRate : number, quantity: number = 1, appliedCoupon: number = 0) : number {
-    return Math.ceil(price*(1-discountRate/100)-appliedCoupon*1000)*quantity 
+    return Math.ceil(price*(1-discountRate/100)-appliedCoupon)*quantity 
 }
 
 export function formatCategoryTitle(title: string) {

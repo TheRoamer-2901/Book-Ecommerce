@@ -28,13 +28,13 @@ const Header = () => {
             })
   }, [])
   return (
-    <div className='px-[100px] py-[20px] w-full flex items-center justify-between shadow-sm shadow-slate-300'>
+    <div className='px-[100px] py-[20px] w-full flex items-center justify-between shadow-sm shadow-slate-300 mb-3'>
         <ul className='w-1/3 flex items-center gap-3'>
             <li className='font-semibold text-sky-600 hover:underline'><Link to='/'>Trang chủ</Link></li>
             <li className='font-semibold text-sky-600 hover:underline'><Link to='/product'>Sách</Link></li>
             <li className='font-semibold text-sky-600 hover:underline'><Link to='/cart'>Giỏ hàng</Link></li>
             {authUser?.role.includes('Seller') 
-            ? <li className='font-semibold text-sky-600 hover:underline'><Link to={`/shop/${authUser.id}`}>Shop của tôi</Link></li>
+            ? <li className='font-semibold text-sky-600 hover:underline'><Link to={`/shop`}>Shop của tôi</Link></li>
             : null}
         </ul>
         <SearchBar />

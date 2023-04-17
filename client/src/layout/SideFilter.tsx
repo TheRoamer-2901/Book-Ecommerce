@@ -1,14 +1,14 @@
 import { ImStarFull } from 'react-icons/im'
 import { isRangeOption, RangeOption, ListOption, FilterCategory } from '../types/Filter'
-import { getSelectedFilter } from '../redux/slices/productOption'
-import { filterApplied } from '../redux/slices/productOption'
+import { getSelectedFilter } from '../redux/slices/filterOptionsSlice'
+import { filterApplied } from '../redux/slices/filterOptionsSlice'
 import { useAppSelector, useAppDispatch } from '../hooks/hook'
 
 const FilterOption = ({title, options, type} : FilterCategory ) => {
     const dispatch = useAppDispatch()
     return (
         <div className='mb-1 px-2 py-1'>
-            <p className='font-semibold text-base'>{title}</p>
+            <p className='font-semibold text-lg text-sky-600'>{title}</p>
             <ul>
                 {options.map((op, i) => {
                     return(
@@ -37,11 +37,11 @@ const FilterOption = ({title, options, type} : FilterCategory ) => {
 }
 
 const SideFilter = () => {
-    const filterInitOptions = useAppSelector(state => state.productOption.filterOptions)
+    const filterInitOptions = useAppSelector(state => state.filterOptions.filterOptions)
   return (
     <div className='border sticky top-0 py-2 border-gray-400 w-[250px] flex flex-col h-fit rounded-sm'>
         <div className='self-center flex items-center flex-col gap-2'>
-            <h4>Phân loại</h4>
+            <h4 className='font-semibold text-lg text-sky-600'>Phân loại</h4>
 
         </div>
         {filterInitOptions.map((c , i) => {

@@ -32,7 +32,7 @@ router.get('/:id', async (req, res) => {
     const orderId = req.params.id
     const order = await prisma.order.findFirst({
         where : {
-            id: orderId 
+            id: orderId
         },
         include: {
             cartItem: {

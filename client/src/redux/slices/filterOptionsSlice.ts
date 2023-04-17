@@ -9,8 +9,8 @@ const initialState : ProductQueryOption = {
     sellerId: sellerInitId
 }
 
-const productOption = createSlice ({
-    name: 'productOption',
+const filterOptions = createSlice ({
+    name: 'filterOptions',
     initialState,
     reducers: {
         filterApplied: (state, action) => {
@@ -46,33 +46,31 @@ const productOption = createSlice ({
 })
 
 
-export function getSelectedFilter() {
+export function getSelectedFilter(options : ProductQueryOption) {
     let filterOptions : filterValue[] = []
-    useAppSelector(state => {
-        state.productOption.filterOptions.forEach(category => {
-            let option : filterValue = {title: formatCategoryTitle(category.title)!, value: {gte: undefined, lte: undefined, in: undefined}}
-            let empty = true
-            for(let op of category.options) {
-                if(op.selected && isRangeOption(op)) {
-                    option.value.gte = op.value[0]
-                    option.value.lte = op.value[1] 
-                    empty = false
-                }
-                if(op.selected && isListOption(op)) {
-                    if(option.value.in == undefined) option.value.in = []
-                    option.value.in.push(op.value)
-                    empty = false
-                }
+    options.filterOptions.forEach(category => {
+        let option : filterValue = {title: formatCategoryTitle(category.title)!, value: {gte: undefined, lte: undefined, in: undefined}}
+        let empty = true
+        for(let op of category.options) {
+            if(op.selected && isRangeOption(op)) {
+                option.value.gte = op.value[0]
+                option.value.lte = op.value[1] 
+                empty = false
             }
-            if(!empty) filterOptions = [option, ...filterOptions]
-        })        
-    })
+            if(op.selected && isListOption(op)) {
+                if(option.value.in == undefined) option.value.in = []
+                option.value.in.push(op.value)
+                empty = false
+            }
+        }
+        if(!empty) filterOptions = [option, ...filterOptions]
+    })        
     return filterOptions
 }
 
 export const {
     filterApplied,
     filterCleared
-} = productOption.actions
+} = filterOptions.actions
 
-export default productOption.reducer
+export default filterOptions.reducer

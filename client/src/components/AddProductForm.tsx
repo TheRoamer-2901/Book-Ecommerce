@@ -1,38 +1,41 @@
-import { useRef } from 'react'
+import { useState, useRef } from 'react'
 import { AiOutlinePlus, AiOutlineClose } from 'react-icons/ai'
-import { Product } from '../types/Product'
-import { useAsync } from '../hooks/useAsync'
-import { getProductById, updateProductStat} from '../lib/axios/product'
 import { useNavigate } from 'react-router-dom'
-import { useParams } from 'react-router-dom'
+import { NewProduct } from '../types/Product'
+import { createNewProduct } from '../lib/axios/product'
 
-type IdParam = {
-    id: string
+const defaultProduct = {
+    name : "",
+    author: "",
+    img: "",
+    price: 0,
+    quantity: 0,
+    discountRate: 0,
+    genres: [],
+    coupons: []
 }
 
-const EditProductForm = () => {
+const AddProductForm = () => {
     const navigate = useNavigate()
     const couponRef = useRef<HTMLInputElement>(null)
     const genreRef = useRef<HTMLInputElement>(null)
-    const { id : productId } = useParams() as IdParam
-    const {data : product, updateData: updateProduct, loading} = useAsync<Product>(() => getProductById(productId), [productId])
-    
-    async function handleUpdateProduct(e : React.FormEvent<HTMLFormElement>) {
+
+    const [ product, setProduct] = useState<NewProduct>(defaultProduct)
+    async function handleCreateProduct(e : React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
-        const res = await(updateProductStat(product!)).then((updatedProduct) => {
-            alert("Cập nhật sản phẩm thành công!")
-            return updatedProduct
+        await(createNewProduct(product)).then((newProduct) => {
+            console.log(newProduct.id);    
+            alert("Tạo sản phẩm thành công!")
+            navigate(`/shop/product/${newProduct.id}/edit`)
         })
         
-        updateProduct(res)
         
     }
 
     return (
         <div>
-            <h4 className='text-lg font-semibold text-sky-600 mx-auto w-fit mb-3'>Chỉnh sửa thông tin sản phẩm</h4>
-                {loading ? <h1>Loading</h1> : 
-                <form className="min-w-[900px]" onSubmit={(e) => handleUpdateProduct(e)}>
+            <h4 className='text-lg font-semibold text-sky-600 mx-auto w-fit mb-3'>Tạo sản phẩm mới</h4>
+                <form className="min-w-[900px]" onSubmit={(e) => handleCreateProduct(e)}>
                     <div className='flex items-center gap-7'>
                         <div>
                             <div className='relative border border-sky-600 px-2 py-2 rounded-md w-fit'>
@@ -43,7 +46,7 @@ const EditProductForm = () => {
                                     type="text"
                                     className='focus:outline-none font-normal text-gray-500 mt-1 w-full'
                                     id="img"
-                                    onChange={(e) => updateProduct({...product!, img: e.target.value})}
+                                    onChange={(e) => setProduct({...product!, img: e.target.value})}
                                     placeholder='Nhập link hình ảnh minh họa sản phẩm'
                                 />
                                 <div className='w-[300px] h-[420px]'>
@@ -75,7 +78,7 @@ const EditProductForm = () => {
                                     className='focus:outline-none font-normal text-gray-500 w-full'
                                     id="product-name"
                                     value={product?.name}
-                                    onChange={(e) => updateProduct({...product!, name: e.target.value})}
+                                    onChange={(e) => setProduct({...product!, name: e.target.value})}
                                 />
                             </div>
                             <div className='relative border border-sky-600 px-2 py-2 rounded-md'>
@@ -84,7 +87,7 @@ const EditProductForm = () => {
                                     className='focus:outline-none font-normal text-gray-500'
                                     id="author-name"
                                     value={product?.author}
-                                    onChange={(e) => updateProduct({...product!, author: e.target.value})}
+                                    onChange={(e) => setProduct({...product!, author: e.target.value})}
                                 />
                             </div>
                             <div className='relative border border-sky-600 px-2 py-2 rounded-md'>
@@ -93,7 +96,7 @@ const EditProductForm = () => {
                                     className='focus:outline-none font-normal text-gray-500'
                                     id="price"
                                     value={product?.price}
-                                    onChange={(e) => updateProduct({...product!, price: parseInt(e.target.value)})}
+                                    onChange={(e) => setProduct({...product!, price: parseInt(e.target.value)})}
                                 />
                             </div>
                             <div className='relative border border-sky-600 px-2 py-2 rounded-md'>
@@ -102,7 +105,7 @@ const EditProductForm = () => {
                                     className='focus:outline-none font-normal text-gray-500'
                                     id="quantity"
                                     value={product?.quantity}
-                                    onChange={(e) => updateProduct({...product!, quantity: parseInt(e.target.value)})}
+                                    onChange={(e) => setProduct({...product!, quantity: parseInt(e.target.value)})}
                                 />
                             </div>
 
@@ -112,7 +115,7 @@ const EditProductForm = () => {
                                     className='focus:outline-none font-normal text-gray-500'
                                     placeholder='Nhập số. VD: 10' id="discount-rate"
                                     value={product?.discountRate}
-                                    onChange={(e) => updateProduct({...product!, discountRate: parseInt(e.target.value)})}
+                                    onChange={(e) => setProduct({...product!, discountRate: parseInt(e.target.value)})}
                                 />
                             </div>
                             <div className='relative border border-sky-600 px-2 py-2 rounded-md'>
@@ -126,11 +129,11 @@ const EditProductForm = () => {
                                     <AiOutlinePlus
                                         onClick={() => {
                                             if(product?.coupons == undefined) {
-                                                updateProduct({...product!, coupons: [parseInt(couponRef.current!.value)]})
+                                                setProduct({...product!, coupons: [parseInt(couponRef.current!.value)]})
                                             }
                                             else {   
                                                 let newCouponList = [...product?.coupons!, parseInt(couponRef.current!.value)]
-                                                updateProduct({...product!, coupons: newCouponList})
+                                                setProduct({...product!, coupons: newCouponList})
                                             }
                                             couponRef.current!.value = ""
                                         }}
@@ -147,7 +150,7 @@ const EditProductForm = () => {
                                             <AiOutlineClose 
                                                 onClick={() => {
                                                     let newCoupons = product?.coupons.filter(c => c !== coupon)
-                                                    updateProduct({...product, coupons: newCoupons})
+                                                    setProduct({...product, coupons: newCoupons})
                                                 }}
                                                 className='ml-1 hover:text-red-500 rounded-full cursor-pointer translate-y-[1px] text-sky-600'
                                             />
@@ -167,7 +170,7 @@ const EditProductForm = () => {
                                     <AiOutlinePlus 
                                         onClick={() => {                                            
                                             let newGenreList = [...product?.genres!, genreRef.current!.value]
-                                            updateProduct({...product!, genres: newGenreList})
+                                            setProduct({...product!, genres: newGenreList})
                                             genreRef.current!.value = ""
                                         }}
                                         className='w-[30px] h-[30px] border-l border-teal-500 cursor-pointer px-1 py-1 font-semibold hover:bg-teal-100 text-teal-500 text-base'
@@ -183,7 +186,7 @@ const EditProductForm = () => {
                                             <AiOutlineClose 
                                                 onClick={() => {
                                                     let newGenres = product?.genres.filter(g => g !== genre)
-                                                    updateProduct({...product, genres: newGenres})
+                                                    setProduct({...product, genres: newGenres})
                                                 }}
                                                 className='ml-1 hover:text-red-500 rounded-full cursor-pointer translate-y-[1px] text-sky-600'
                                             />
@@ -197,9 +200,8 @@ const EditProductForm = () => {
                     </div>
                     
                 </form>
-            }
         </div>
   )
 }
 
-export default EditProductForm
+export default AddProductForm
