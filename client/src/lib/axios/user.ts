@@ -44,3 +44,13 @@ export function renewUserAccessToken() {
         method: 'get'
     })
 }
+
+export function updateUserProfile(token: string, profile : any) {
+    return makeRequest('user/update', {
+        method: 'post',
+        headers: {
+            'authorization': 'Bearer ' + token
+        },
+        data: profile
+    })
+}

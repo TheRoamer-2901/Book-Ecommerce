@@ -1,16 +1,24 @@
 
 type buttonProps = {
-    content: string
+    img?: string,
+    content: string,
     onCLickFunc: () => any
 }
 
-const Button = ({content, onCLickFunc} : buttonProps) => {
+const Button = ({img, content, onCLickFunc} : buttonProps) => {
+  
   return (
     <button
         onClick={() => {onCLickFunc()}} 
-        className='px-3 py-1 font-semibold border rounded-sm border-sky-600 text-sky-600 hover:bg-slate-200'
+        className='gap-1 px-3 py-1 font-semibold border rounded-sm border-sky-600 text-sky-600 hover:bg-slate-200 flex items-center'
     >  
-        {content}
+        {img != "" && 
+          <div className="w-[35px] h-[35px] rounded-full overflow-hidden">
+            <img src={img} className="w-full h-full object-cover"/>
+          </div>
+        }
+
+        <p>{content}</p>
     </button>
   )
 }

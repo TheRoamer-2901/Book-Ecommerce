@@ -21,7 +21,7 @@ const AuthenFormControl = () => {
     <div className="relative">
       {user.name === ""
       ? <Button content="Đăng nhập" onCLickFunc={toggleOpen}/>
-      : <Button content={user.name} onCLickFunc={toggleOpen}/>
+      : <Button img={user.img} content={user.name} onCLickFunc={toggleOpen}/>
       }
 
       {open && !user.name &&

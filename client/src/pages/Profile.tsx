@@ -11,27 +11,34 @@ const Profile = () => {
 
   return (
     <div className="px-3 py-3">
-      <h4 className="font-semibold text-lg text-sky-600 my-1">Thông tin tài khoản</h4>
-      <p>
-        <span className="font-medium">
-          Tên tài khoản: </span>{authUser?.name}
-      </p>
-      <p>
-        <span className="font-medium">
-          Email: </span>{authUser?.email ? authUser?.email : <span className="italic text-gray-400">Chưa cập nhật</span>}
-      </p>
-      <p>
-        <span className="font-medium">Số điện thoại: </span>{authUser?.phone  ? authUser.phone : <span className="italic text-gray-400">Chưa cập nhật</span>}
-      </p>
-      <p>
-        <span className="font-medium">Loại tài khoản: </span>{authUser ? getUserAccountType(authUser.role) : ""}
-      </p>
-      <button 
-        onClick={() => {navigate("edit")}}
-        className="px-2 py-1 text-amber-300 hover:bg-amber-50 border border-amber-300 rounded-sm flex items-center justify-center"
-      >
-        Cập nhật<AiFillEdit />
-      </button>
+      <h4 className="font-semibold text-lg text-sky-600 my-1 mx-auto w-fit">Thông tin tài khoản</h4>
+      <div className="flex items-center gap-3">
+          <div className="w-[120px] h-[120px] rounded-full border border-gray-300 overflow-hidden">
+            <img className= "object-cover w-full h-full"
+              src="https://mir-s3-cdn-cf.behance.net/project_modules/fs/7c27c1115380977.604d71f1a7189.png"
+            />
+          </div>
+          <div className="flex flex-col">
+            <p className="text-lg font-semibold">Tên tài khoản: {authUser?.name}</p>
+            <p>
+                <span className="font-semibold">Email: </span>{authUser?.email ? authUser?.email : <span className="italic text-gray-400">Chưa cập nhật</span>}
+            </p>
+            <p>
+              <span className="font-medium">Số điện thoại: </span>{authUser?.phone  ? authUser.phone : <span className="italic text-gray-400">Chưa cập nhật</span>}
+            </p>
+            <p>
+              <span className="font-medium">Loại tài khoản: </span>{authUser ? getUserAccountType(authUser.role) : ""}
+            </p>
+          </div>
+          <button 
+            onClick={() => {navigate("edit")}}
+            className="ml-[50px] px-2 py-1 font-semibold text-amber-300 hover:bg-amber-50 border border-amber-300 rounded-sm flex items-center justify-center"
+          >
+            Cập nhật<AiFillEdit />
+          </button>
+      </div>
+
+
     </div>
   )
 }

@@ -7,6 +7,7 @@ const initialState : {authUser: AuthUser} = {
     authUser: {
         id: "",
         name: "",
+        img: "",
         email: "",
         phone: "",
         role: [],
@@ -26,6 +27,9 @@ const userSlice = createSlice({
         },
         userTokenRenewed: (state, action) => {
             state.authUser = action.payload
+        },
+        userProfileUpdated: (state, action) => {
+            state.authUser = {...state.authUser, ...action.payload.updatedProfile}
         }
     }
 })
@@ -37,7 +41,8 @@ export function getAuthUser() {
 export const {
     userLoggedIn,
     userLoggedOut,
-    userTokenRenewed
+    userTokenRenewed,
+    userProfileUpdated
 } = userSlice.actions
 
 export default userSlice.reducer
