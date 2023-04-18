@@ -7,6 +7,10 @@
   box-shadow: border-box;
 }
 
+body{
+  min-height: 100vh;
+}
+
 button:focus{
   outline: none;
 }

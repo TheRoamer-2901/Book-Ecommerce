@@ -1,6 +1,7 @@
 import './App.css'
 import { Routes, Route } from 'react-router-dom'
 import Header from './layout/Header'
+import Footer from './layout/Footer'
 import Home from './pages/Home'
 import Cart from './pages/Cart'
 import Product from './pages/Product'
@@ -19,7 +20,7 @@ import ShopProductDetail from './pages/ShopProductDetail'
 function App() {
 
   return (
-    <div className="w-full h-full flex flex-col items-center">
+    <div className="w-full h-full flex flex-col items-center min-h-screen gap-2">
       <Header />
       <Routes>
         <Route path='/' element={<Home />} />
@@ -38,6 +39,8 @@ function App() {
         <Route path='/checkout' element={<Checkout />} />
         <Route path='/shop' element={<Shop />} />
       </Routes>
+
+      <Footer />
     </div>
   )
 }
