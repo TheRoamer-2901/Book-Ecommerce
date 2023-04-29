@@ -21,13 +21,11 @@ router.get('/all', async (req, res) => {
         }
     })
 
-    console.log(orderList);
     
     res.json(orderList)
 })
 
 router.get('/:id', async (req, res) => {
-    console.log(req.params.id);
     
     const orderId = req.params.id
     const order = await prisma.order.findFirst({
@@ -43,7 +41,6 @@ router.get('/:id', async (req, res) => {
         }
     })
 
-    console.log(order)
     res.json(order)
 })
 
@@ -58,7 +55,7 @@ router.post('/create', async(req, res) => {
             description : "Đặt hàng thành công. Sản phẩm đang trong quá trình xử lý"
         }
         return {
-            note : order.orderInfo.note,
+            note : order.orderInfo.note ? order.orderInfo.note : "",
             location: order.orderInfo.location,
             cartItemId : order.id,
             deliveryLog : [initDeliveryStatus],
@@ -69,7 +66,7 @@ router.post('/create', async(req, res) => {
 
     const orders = await prisma.order.createMany({
         data : orderList
-    })
+    })  
     
     const orderedItems = await prisma.cartItem.updateMany({
         where: {
@@ -79,8 +76,7 @@ router.post('/create', async(req, res) => {
             isOrdered: true
         }
     })
-    console.log("order: ", orderedItems)
-    res.json({name: 321})
+    res.json(itemIdList)
 })
 
 export default router

@@ -3,7 +3,8 @@ import { CartItem } from "../../types/Product";
 import { 
     addCartItem,
     updateCartItemQuantity,
-    deleteCartItem
+    deleteCartItem,
+    syncCart
 } from "../../lib/axios/cart";
 import {
     saveOrder
@@ -44,9 +45,17 @@ export const deleteCartItemFromDB = createAsyncThunk(
     'cart/cartItemDelted',
     async (data : object, { dispatch }) => {
         const res = await deleteCartItem(data)
-        console.log(res)
         dispatch(productRemoved({
             product: res.product
+        }))
+    }
+)
+export const syncCartWithDB = createAsyncThunk(
+    'cart/cartSynced',
+    async (data: {items: object, token: string}, { dispatch } ) => {
+        const res = await syncCart(data.items, data.token)
+        dispatch(cartInited(
+            {items: res
         }))
     }
 )
@@ -54,19 +63,35 @@ export const deleteCartItemFromDB = createAsyncThunk(
 export const createNewOrderFromCartItem = createAsyncThunk(
     'cart/orderCreated',
     async (data: object, {dispatch}) => {
-        const res = await saveOrder(data).then(res => console.log(res))
+        const res = await saveOrder(data)
+        dispatch(itemOrdered({idList: res}))
     }
 )
+
 
 const cartSlice = createSlice({
     name: 'cart',
     initialState, 
     reducers: {
+        cartInited: (state, action) => {
+            const newItems = action.payload.items.map((item : any)=> {
+                return {
+                    id: item.id,
+                    selected: false,
+                    quantity: item.quantity,
+                    product: {...item.product},
+                    appliedCouponValue: 0
+                }
+            })
+            state.items = newItems
+        },
+        itemOrdered: (state, action) => {
+          state.items = state.items.filter(item => !action.payload.idList.includes(item.id))  
+          
+        },
         productAdded: (state, action) => {
-            console.log(action.payload)
             const itemId = state.items.findIndex(item => item.product.id === action.payload.product.id)
             if(itemId >= 0) {                                
-                console.log(action.payload.quantity);
                 state.items[itemId].quantity += action.payload.quantity
             } else{                
                 
@@ -104,18 +129,17 @@ const cartSlice = createSlice({
             state.items = state.items.map(item => {
                 return item.product.id === action.payload.product.id ? {...item, orderInfo: action.payload.orderInfo } : item
             })
-        }
-    
+        },
     },
     extraReducers: (builder) => {
         builder
-        .addCase(addCartItemToDB.fulfilled, (state, action) => {
-            console.log("123", action.payload)
+        .addCase(addCartItemToDB.fulfilled, () => {
         })
-        .addCase(updateCartItemQuantityToDB.fulfilled, (state, action) => {
+        .addCase(updateCartItemQuantityToDB.fulfilled, () => {
         })
         .addCase(deleteCartItemFromDB.fulfilled, () => {
-
+        })
+        .addCase(syncCartWithDB.fulfilled, () => {
         })
     }
 })
@@ -126,7 +150,9 @@ export const {
     productRemoved,
     itemSelected,
     couponApplied,
-    orderInfoUpdated
+    orderInfoUpdated,
+    cartInited,
+    itemOrdered
 } = cartSlice.actions
 
 export default cartSlice.reducer

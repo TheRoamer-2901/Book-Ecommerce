@@ -54,7 +54,7 @@ const Item = (props : CartItem) => {
                 </div>
                 <div className="cursor-pointer relative" onClick={() => {toggleOpen()}}>
                     {props.appliedCouponValue > 0 
-                    ? <p className="font-medium text-base text-sky-600">{props.appliedCouponValue}k</p>
+                    ? <p className="font-medium text-base text-sky-600">{props.appliedCouponValue/1000}k</p>
                     : <p className="font-semibold text-base text-red-500">Chưa áp dụng mã giảm giá</p>}
                     {open ?                     
                     <ul className="rounded-md overflow-hidden absolute border  border-sky-600 font-semibold top-[30px] left-0">
@@ -70,7 +70,7 @@ const Item = (props : CartItem) => {
                             ))}}
                              className="w-[50px] px-2 py-1 hover:bg-sky-100 bg-white text-sky-600"key={i}
                             >
-                                {coupon}k
+                                {coupon/1000}k
                             </li>)
                     })
                     : <li className="w-fit px-2 py-1 hover:bg-gray-100 bg-white">Hiện chưa có mã giảm giá</li>

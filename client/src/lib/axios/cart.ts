@@ -23,3 +23,12 @@ export async function deleteCartItem(data : any) {
         data: data
     })
 }
+
+export async function syncCart(data: any, token: string) {
+    return makeRequest('/cart/sync', {
+        method: "post",
+        headers: {'authorization': 'Bearer ' + token},
+        data: data
+    })
+    
+}

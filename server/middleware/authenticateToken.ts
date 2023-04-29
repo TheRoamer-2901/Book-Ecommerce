@@ -10,7 +10,6 @@ export function authenticateToken(req, res, next) {
         delete user.iat;
         delete user.exp;  
         req.user = user
-        console.log("user at auth: ", user)
         next()
       }
     })

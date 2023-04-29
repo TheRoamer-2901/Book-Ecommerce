@@ -24,7 +24,7 @@ module.exports = {
         },
       },
       animation: {
-        blink: 'blink 1.2s ease-in infinite'
+        blink: 'blink 1.5s ease-in-out infinite'
       }
     },
   },

@@ -25,6 +25,7 @@ const EditProfile = () => {
 
     useEffect(() => {
         nameRef.current!.value = authUser.name
+        linkRef.current!.value = authUser.img
         imageRef.current!.src = authUser.img
         emailRef.current!.value = authUser.email
         phoneRef.current!.value  = authUser.phone
@@ -135,7 +136,11 @@ const EditProfile = () => {
                 :
                 <div>
                     <p className='mb-3 text-sm font-medium text-emerald-500 italic'>
-                        Mã OTP đã được gửi qua email của bạn!<br /> Vui lòng nhập trong thời gian quy định để cập nhật thông tin!
+                        Mã OTP đã được gửi qua email của bạn!
+                        <br /> 
+                        Vui lòng nhập trong thời gian quy định để cập nhật thông tin!
+                        <br />
+                        <span className='text-red-600'>Tính năng đang trong quá trình hoàn thiện, để kiểm tra sự cập nhật, hãy ấn tiếp tục mà không cần nhập mã OTP</span>
                     </p>
                     <div className='relative border border-sky-600 px-2 py-2 rounded-md'>
                         <label className="absolute -top-[13px] text-sky-600 bg-white px-1 font-semibold z-20" htmlFor='phone-number'>
@@ -154,7 +159,7 @@ const EditProfile = () => {
                         Xác nhận
                     </button>
                 </div>}
-                {duration &&    <OTPCountDown remainingTime={duration} countDown={() => {setDuration(prev => prev-1)}}/>         
+                {duration >= 0 &&    <OTPCountDown remainingTime={duration} countDown={() => {setDuration(prev => prev-1)}}/>         
 }
 
                 

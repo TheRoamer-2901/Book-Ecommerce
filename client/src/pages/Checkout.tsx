@@ -42,9 +42,9 @@ const Item = (props : CartItem) => {
             {open && <LocationSelectionForm closeForm={toggleOpen} updateLocation={updateLocation}/>}
             <div className="absolute top-2 right-2 flex items-center h-[20px] cursor-pointer" onClick={() => {toggleOpen()}}>
               <span><HiOutlineLocationMarker className="text-sky-600 w-[20px] h-[20px]"/> </span>
-              {!props.orderInfo.location 
+              {!props.orderInfo?.location 
               ? <span className="italic font-medium text-slate-400">Chọn địa chỉ</span> 
-              : <span className="italic font-medium text-sky-600">{props.orderInfo.location}</span>
+              : <span className="italic font-medium text-sky-600">{props.orderInfo?.location}</span>
               }
             </div>
             <div className="grid grid-cols-checkout items-center gap-1">

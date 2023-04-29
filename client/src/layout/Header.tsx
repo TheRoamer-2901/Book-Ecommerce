@@ -1,17 +1,21 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import DropDownCart from '../components/DropDownCart';
 import AuthenFormControl from '../components/AuthenFormControl';
 import SearchBar from '../components/SearchBar';
 import { useAsync } from '../hooks/useAsync'
-import { useAppDispatch } from '../hooks/hook';
+import { useAppDispatch, useAppSelector } from '../hooks/hook';
 import { userLoggedOut, userTokenRenewed } from '../redux/slices/userSlice';
 import { getUserByAccessToken, renewUserAccessToken } from '../lib/axios/user'
 import { getAuthUser } from '../redux/slices/userSlice'
+import { syncCart } from '../lib/axios/cart';
+import { syncCartWithDB } from '../redux/slices/cartSlice';
 
 const Header = () => {
   const dispatch = useAppDispatch()
   const authUser = getAuthUser()
-  useAsync(() => {
+  const cartItems = useAppSelector(state => state.cart.items)
+  useAsync<any>(() => {
     
     return getUserByAccessToken(authUser?.token)
             .then(res => console.log(res))
@@ -27,6 +31,15 @@ const Header = () => {
               }
             })
   }, [])
+
+  useEffect(() => {
+    if(authUser.name !== "") {
+      dispatch(syncCartWithDB({
+        items: cartItems,
+        token: authUser.token
+      }))
+    }
+  }, [JSON.stringify(authUser)])
   return (
     <div className='px-[100px] py-[20px] w-full flex items-center justify-between shadow-sm shadow-slate-300 mb-3'>
         <ul className='w-1/3 flex items-center gap-3'>

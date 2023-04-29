@@ -107,7 +107,7 @@ const Cart = ({cartItems, closeCart} : cartProps) => {
     return(
         <div className="absolute z-50 bg-slate-50 px-2 py-2 border border-slate-300 top-[40px] right-0 w-[320px]">
             <h4 className="relative text-center text-lg font-semibold text-sky-600">
-                <span>Purchased Product</span>
+                <span>Giỏ hàng của tôi</span>
                 <AiOutlineClose 
                     onClick = {() => closeCart()}
                     className="absolute top-0 right-0 text-red-600 cursor-pointer" 
@@ -117,10 +117,10 @@ const Cart = ({cartItems, closeCart} : cartProps) => {
                 cartItems.map((item : CartItem, i) => {
                     return <Item {...item} key={i}/>
                 })
-                : <p className="text-sm text-sky-600 font-semibold">Your cart is currently empty!</p>
+                : <p className="text-sm text-sky-600 font-semibold">Giỏ hàng đang trống!</p>
             }
             <Link to='/cart'>
-                <p onClick = {() => closeCart()}className="font-medium text-sky-400 text-sm cursor-pointer">View Cart Detail...</p>
+                <p onClick = {() => closeCart()}className="font-medium text-sky-400 text-sm cursor-pointer">Xem chi tiết...</p>
             </Link>
         </div>  
     )

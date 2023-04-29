@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { AiOutlineStar, AiFillEdit } from "react-icons/ai";
+import { AiFillStar, AiFillEdit } from "react-icons/ai";
 import { BsFillTrashFill } from "react-icons/bs";
 import { Product as productProps} from "../types/Product";
 import { useNavigate } from "react-router-dom";
@@ -29,11 +29,11 @@ const ShopProductItem = ({id, name, author, img, price, discountRate} : productP
             </Link>
           <p className="font-medium text-sm text-slate-300">{author}</p>
           <div className="flex">
-            <AiOutlineStar className="text-amber-300"/>
-            <AiOutlineStar className="text-amber-300"/>
-            <AiOutlineStar className="text-amber-300"/>
-            <AiOutlineStar className="text-amber-300"/>
-            <AiOutlineStar className="text-amber-300"/>
+            <AiFillStar className="text-amber-300"/>
+            <AiFillStar className="text-amber-300"/>
+            <AiFillStar className="text-amber-300"/>
+            <AiFillStar className="text-amber-300"/>
+            <AiFillStar className="text-amber-300"/>
           </div>
           <div>
               <span className="text-sm font-semibold">{Math.ceil(price*(1-discountRate/100))}</span>
