@@ -41,10 +41,8 @@ router.get('/login', async (req, res) => {
 })
 
 router.post('/signup', async (req, res) => {
-  console.log("try register new user")
   const username : any = req.query.username 
   const password : any = req.query.password
-
   
   const user = await prisma.user.findFirst({
     where: {

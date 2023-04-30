@@ -1,4 +1,3 @@
-import React from 'react'
 import main from '../assets/main.jpg'
 import detective from '../assets/detective.jpg'
 import science from '../assets/science.jpg'
@@ -8,19 +7,30 @@ import spychology from '../assets/psychology.jpg'
 import novel from '../assets/novel.jpg'
 import fantasy from '../assets/fantasy.jpg'
 import comic from '../assets/comic.jpg'
+import logo from '../assets/logo.png'
+import { useAppDispatch, useAppSelector } from '../hooks/hook'
 import { FaShippingFast } from "react-icons/fa"
 import { GiReceiveMoney } from "react-icons/gi"
 import { MdAddToHomeScreen } from "react-icons/md"
 import { useNavigate } from 'react-router-dom'
+import { updateUserRole } from '../lib/axios/user'
+import { userRoleUpdated } from '../redux/slices/userSlice'
 
 const Home = () => {
+  const authUser = useAppSelector(state => state.user.authUser)
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
   return (  
     <div>
       <section className='w-full max-w[1050px]'>
-        <h4 className='text-xl font-semibold text-sky-600'>
-          <span>Sàn thương mại điện tử</span> <br />
-          <span className='translate-x-[20px]'>cho độc giả Việt</span>
+        <h4 className='text-xl font-semibold text-sky-600 flex items-center'>
+          <div className='w-[240px] h-[240px]'>
+            <img src={logo} className='w-full h-full object-cover' />
+          </div>
+          <p>
+            <span>Sàn thương mại điện tử</span> <br />
+            <span className='translate-x-[20px]'>cho độc giả Việt Nam</span>
+          </p>
         </h4>
         <div className='w-[450px] h-[300px] mx-auto'>
           <img src={main} className='w-full h-full object-contain'/>
@@ -85,7 +95,7 @@ const Home = () => {
             Mua ngay
         </button>
       </div>
-      <section className='mb-[100px]'>
+      <section className='mb-[30px]'>
         <h4 className='text-lg font-semibold text-sky-600 mb-5'>
         Và nhiều tiện ích khác
         </h4>
@@ -111,12 +121,22 @@ const Home = () => {
               <p className="font-semibold text-lg text-violet-600">Thao tác dễ dàng</p>
             </div>
           </div>
-
+        </div>
+        <div className='w-full flex items-center justify-center mt-5'>
+          <button className='mt-[70px] mx-auto w-fit px-2 py-1 text-lg font-semibold text-sky-600 border border-sky-600 hover:bg-sky-100' onClick={async() => {
+            if(authUser.name !== "") {
+              const roles = await updateUserRole(authUser.token)              
+              dispatch(userRoleUpdated({roles}))
+              alert("Thành công! Hãy bắt đầu cung cấp sản phẩm của riêng bạn")
+              navigate('/shop')
+            } else{
+              alert("Hãy tạo một tài khoản để thực hiện thao tác này")
+            }
+          }}>
+              Trở thành nhà phân phối của chúng tôi
+          </button>
         </div>
       </section>
-
-    
-  
     
     </div>
 

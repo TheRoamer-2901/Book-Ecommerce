@@ -11,7 +11,7 @@ const LoginButton = ({content, onCLickFunc} : buttonProps) => {
             onClick={() => {onCLickFunc()}} 
             className='gap-1 px-3 py-1 font-semibold border rounded-sm border-sky-600 text-sky-600 hover:bg-slate-200 flex items-center'
         >  
-            <RxAvatar className='w-[25px] h-[25px]'/>
+            <RxAvatar className='w-[22px] h-[22px]'/>
 
     
             <p>{content}</p>

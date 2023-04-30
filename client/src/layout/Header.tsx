@@ -4,11 +4,11 @@ import DropDownCart from '../components/DropDownCart';
 import AuthenFormControl from '../components/AuthenFormControl';
 import SearchBar from '../components/SearchBar';
 import { useAsync } from '../hooks/useAsync'
+import logo from '../assets/logo.png'
 import { useAppDispatch, useAppSelector } from '../hooks/hook';
 import { userLoggedOut, userTokenRenewed } from '../redux/slices/userSlice';
 import { getUserByAccessToken, renewUserAccessToken } from '../lib/axios/user'
 import { getAuthUser } from '../redux/slices/userSlice'
-import { syncCart } from '../lib/axios/cart';
 import { syncCartWithDB } from '../redux/slices/cartSlice';
 
 const Header = () => {
@@ -43,6 +43,7 @@ const Header = () => {
   return (
     <div className='px-[100px] py-[20px] w-full flex items-center justify-between shadow-sm shadow-slate-300 mb-3'>
         <ul className='w-1/3 flex items-center gap-3'>
+            <li className='w-[120px] h-[60px]'><Link to='/'><img className="object-cover w-full h-full" src={logo}/></Link></li>
             <li className='font-semibold text-sky-600 hover:underline'><Link to='/'>Trang chủ</Link></li>
             <li className='font-semibold text-sky-600 hover:underline'><Link to='/product'>Sách</Link></li>
             <li className='font-semibold text-sky-600 hover:underline'><Link to='/cart'>Giỏ hàng</Link></li>

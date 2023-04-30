@@ -9,15 +9,15 @@ const SignupForm = () => {
     async function handleSignup(e : React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         if(userRef.current == null || passwordRef.current == null || confirmRef == null) {
-            console.log("empty field")
+            alert("Vui lòng điền đầy đủ thông tin để đăng ký tài khoản")
         }
         if(userRef.current && passwordRef.current && confirmRef.current) {
             if(passwordRef.current.value !== confirmRef.current.value) {
-                console.log("Password confirmation mismatched! Please try again !!!")
+                alert("Mật khẩu không trùng khớp, vui lòng thử lại !!!")
                 return;
             }
             const user = await createUser(userRef.current.value, passwordRef.current.value)
-            console.log("new user: ", user)
+            alert("Tạo tài khoản thành công!")
 
         }
     }

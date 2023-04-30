@@ -54,3 +54,12 @@ export function updateUserProfile(token: string, profile : any) {
         data: profile
     })
 }
+
+export function updateUserRole(token: string) {    
+    return makeRequest('user/update/role', {
+        method: 'post',
+        headers: {
+            'authorization': 'Bearer ' + token
+        },
+    })
+}

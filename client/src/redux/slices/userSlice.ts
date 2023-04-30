@@ -30,6 +30,9 @@ const userSlice = createSlice({
         },
         userProfileUpdated: (state, action) => {
             state.authUser = {...state.authUser, ...action.payload.updatedProfile}
+        },
+        userRoleUpdated: (state, action) => {
+            state.authUser = {...state.authUser, ...action.payload.role}            
         }
     }
 })
@@ -42,7 +45,8 @@ export const {
     userLoggedIn,
     userLoggedOut,
     userTokenRenewed,
-    userProfileUpdated
+    userProfileUpdated,
+    userRoleUpdated
 } = userSlice.actions
 
 export default userSlice.reducer
