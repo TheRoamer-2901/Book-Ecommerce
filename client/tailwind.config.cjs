@@ -24,6 +24,7 @@ module.exports = {
         },
       },
       animation: {
+        'spin-fast': 'spin 0.4s linear infinite',
         blink: 'blink 1.5s ease-in-out infinite'
       }
     },

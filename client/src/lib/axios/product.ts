@@ -2,8 +2,15 @@ import { Product } from "../../types/Product";
 import { makeRequest } from "./request";
 
 
+
 export function getProductById(id : string) {
     return makeRequest(`/product/${id}`,{
+        method: 'get'
+    })
+}
+export function getShopProductById(id : string, token: string) {
+    return makeRequest(`/seller/product/${id}`,{
+        headers: {'authorization': 'Bearer ' + token},
         method: 'get'
     })
 }

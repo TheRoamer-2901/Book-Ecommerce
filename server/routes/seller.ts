@@ -124,6 +124,18 @@ router.post('/product/update', async(req, res) => {
     
 })
 
+router.get('/product/:id', authenticateToken, async(req, res) => {
+    const { id : productId} = req.params;  
+
+    let product = await prisma.product.findUnique({
+        where: {
+        id: productId
+        }
+    })
+    res.json(product)
+
+})
+
 router.post('/product/create', async(req, res) => {
     let product = req.body
     

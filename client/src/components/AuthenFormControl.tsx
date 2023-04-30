@@ -42,7 +42,7 @@ const AuthenFormControl = () => {
 
         </div>
       }
-      {open && user.name && <UserControl />}
+      {open && user.name && <UserControl toggleOpen={toggleOpen}/>}
     </div>
   )
 }

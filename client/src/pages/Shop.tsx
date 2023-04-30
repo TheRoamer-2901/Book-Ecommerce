@@ -11,6 +11,7 @@ import SideFilter from '../layout/SideFilter'
 import AppliedFilterOption from '../components/FilterOption'
 import ShopProductItem from "../components/ShopProductItem"
 import Pagination from '../components/Pagination'
+import Loading from '../components/Loading'
 import { getSelectedFilter } from "../redux/slices/filterOptionsSlice"
 import { useAppSelector } from "../hooks/hook"
 import { useNavigate } from "react-router-dom"
@@ -60,7 +61,7 @@ const Shop = () => {
             <p className="font-semibold">Thêm sản phẩm</p>
           </button>
         </div>
-        {loading ? <div className="w-full max-w-[1300px] grid grid-cols-fill gap-3.5 justify-self-center"><h1>Loading...</h1></div>
+        {loading ? <div className="w-full max-w-[1300px] grid grid-cols-fill gap-3.5 justify-self-center"><Loading/></div>
             : <>
               <div className="w-full max-w-[1300px] grid grid-cols-fill gap-3.5 justify-self-center">
                 {
@@ -69,7 +70,7 @@ const Shop = () => {
                   })
                 }
               </div>
-              {!maxPageLoading && <Pagination currentPage={currentPage} maxPage={Math.ceil(total!/PAGE_ITEM)} updatePage={updatePage}/>}
+              <Pagination currentPage={currentPage} maxPage={Math.ceil(total!/PAGE_ITEM)} updatePage={updatePage}/>
             </>
           }
       </div>

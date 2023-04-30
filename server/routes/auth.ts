@@ -7,7 +7,7 @@ const router = express()
 router.get('/login', async (req, res) => {  
   const username : any = req.query.username 
   const password : any = req.query.password
-
+  
   const user = await prisma.user.findFirst({
     where: {
       name: username,
@@ -104,13 +104,14 @@ router.get('/refreshToken', async (req, res) => {
     if(user == null) res.sendStatus((403))
     
     let userWithNewAccessToken = {};
+    let newAccessToken : string = "";
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as Secret,  (err, user) => {
       if(err) res.sendStatus(403)
       delete user.iat
       delete user.exp
-      let newAccessToken = jwt.sign(user as JwtPayload, process.env.ACCESS_TOKEN_SECRET as Secret, {expiresIn: '10m'})
-      userWithNewAccessToken = {...user, token: newAccessToken}
-    })  
+      newAccessToken = jwt.sign(user as JwtPayload, process.env.ACCESS_TOKEN_SECRET as Secret, {expiresIn: '10m'})
+    })      
+    userWithNewAccessToken = {...user, token: newAccessToken}
     res.json(userWithNewAccessToken)
   }
 

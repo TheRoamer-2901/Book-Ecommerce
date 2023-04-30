@@ -5,7 +5,7 @@ import { authenticateToken } from '../middleware/authenticateToken.js'
 const router = express.Router()
 
 router.get('/token', authenticateToken, (req : any, res) => {
-    const user = req.user;    
+    const user = req.user;            
     res.json(user)
 }) 
 
@@ -25,11 +25,13 @@ router.post('/update/role', authenticateToken, async (req : any, res) => {
 
 router.post('/update', authenticateToken, async (req : any, res) => {    
     const userId = req.user.id
+    const data = req.body
+    if (data.password == "") delete data.password
     const updatedUserProfile = await prisma.user.update({
         where: {
             id: userId
         },
-        data: req.body, 
+        data: data, 
         select: {
             name: true,
             img: true,
@@ -38,6 +40,7 @@ router.post('/update', authenticateToken, async (req : any, res) => {
 
         }
     })
+    
     res.json(updatedUserProfile)    
 })
     

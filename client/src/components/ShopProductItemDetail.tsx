@@ -3,21 +3,38 @@ import { AiFillEdit , AiFillStar } from 'react-icons/ai'
 import { BsFillTrashFill } from 'react-icons/bs'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Product } from '../types/Product'
+import { useAsync } from '../hooks/useAsync'
+import { useAppSelector } from '../hooks/hook'
 import { getDiscountPrice } from '../utils/product.js'
+import { getShopProductById } from '../lib/axios/product'
+import Loading from './Loading'
 
 const ProductItemDetail = () => {
+    const authUser = useAppSelector(state => state.user.authUser)
     const { id } = useParams()
     const navigate = useNavigate()
 
-    const [product, setProduct] = useState<Product | undefined>()
+    const {data: product, loading} = useAsync<Product>(() => {
+        if(authUser.name != "") {
+            console.log(authUser);
+            
+            return getShopProductById(id as string, authUser!.token)
+        } else {
+            return Promise.resolve({
+                id: "",
+                name : "",
+                author: "",
+                img: "",
+                price: 0,
+                quantity: 0,
+                discountRate: 0,
+                genres: [],
+                coupons: []
+            })
+        }
+    }, [id, JSON.stringify(authUser)])
 
-
-    useEffect(() => {
-      fetch(`http://localhost:3000/product/${id}`)
-      .then(res => res.json())
-      .then(data => setProduct(data))
-    }, [id])
-
+    if(loading) return <Loading />
 
     return (
         <div className='flex border h-fit border-gray-200 rounded-sm'>

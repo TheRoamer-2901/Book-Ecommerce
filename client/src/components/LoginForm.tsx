@@ -25,7 +25,7 @@ const LoginForm = ({toggleOpen}: loginFormProps) => {
                         toggleOpen()
                         navigate('/product')
                     }) 
-                    .catch(err => console.log("Unauthorized!"))
+                    .catch(err => alert("Đăng nhập thất bại!"))
         }
     }
 

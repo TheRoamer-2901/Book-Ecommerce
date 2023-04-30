@@ -44,8 +44,8 @@ const EditProfile = () => {
             password: passwordRef.current!.value,
             email: emailRef.current!.value,
             phone: phoneRef.current!.value
-
         }).then(profile => {
+            console.log(profile);
             dispatch(userProfileUpdated({updatedProfile: profile}))
             alert("Cập nhật thông tin cá nhân thành công!")
             navigate('/user')

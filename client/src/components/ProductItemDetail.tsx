@@ -6,7 +6,10 @@ import { CartItem, Product } from '../types/Product'
 import { productAdded } from '../redux/slices/cartSlice'
 import { addCartItemToDB, updateCartItemQuantityToDB } from '../redux/slices/cartSlice'
 import { useAppSelector, useAppDispatch } from '../hooks/hook'
+import { useAsync } from '../hooks/useAsync'
 import { getDiscountPrice } from '../utils/product.js'
+import { getProductById } from '../lib/axios/product'
+import Loading from './Loading'
 
 const ProductItemDetail = () => {
     const { id } = useParams()
@@ -14,7 +17,6 @@ const ProductItemDetail = () => {
     const authUser = useAppSelector(state => state.user.authUser)
     const cartItems = useAppSelector(state => state.cart.items)
     const [quantity, setQuantity] = useState<number>(0)
-    const [product, setProduct] = useState<Product | undefined>()
 
     function getCartItemId(cartItems : CartItem[], productId : string) : string | undefined {        
         const cartItem = cartItems.find(item => item.product?.id === productId)
@@ -36,21 +38,17 @@ const ProductItemDetail = () => {
                     dispatch(addCartItemToDB({product: product, quantity: quantity, userId: authUser.id})).unwrap()
                 }
             }
-            else {
-                console.log(654321);
-                
+            else {                
                 dispatch(productAdded({product: product, quantity: quantity, selected: selected}))
             }
         }
     }
 
-    useEffect(() => {
-      fetch(`http://localhost:3000/product/${id}`)
-      .then(res => res.json())
-      .then(data => setProduct(data))
+    const {data : product, loading} = useAsync<Product>(() => {        
+        return getProductById(id as string)
     }, [id])
 
-
+    if(loading) return <Loading />  
     return (
         <div className='flex border h-fit border-gray-200 rounded-sm'>
             <div className='h-[500px] w-[350px] overflow-hidden'>

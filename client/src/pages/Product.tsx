@@ -8,7 +8,7 @@ import { getSelectedFilter } from '../redux/slices/filterOptionsSlice'
 import AppliedFilterOption from "../components/FilterOption"
 import Pagination from '../components/Pagination'
 import { useState } from "react"
-import { current } from "@reduxjs/toolkit"
+import Loading from '../components/Loading'
 
 let PAGE_ITEM = 12;
 
@@ -45,7 +45,7 @@ const Product = () => {
       <SideFilter />
       <div>
         <AppliedFilterOption />
-          {loading ?               <div className="w-full max-w-[1300px] grid grid-cols-fill gap-3.5 justify-self-center"><h1>Loading...</h1></div>
+          {loading ?               <div className="w-full max-w-[1300px] grid grid-cols-fill gap-3.5 justify-self-center"><Loading /></div>
             : <>
               <div className="w-full max-w-[1300px] grid grid-cols-fill gap-3.5 justify-self-center">
                 {
