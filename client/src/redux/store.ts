@@ -8,7 +8,8 @@ export const store = configureStore({
         cart: cartReducer,
         filterOptions: filterOptionsReducer,
         user: userReducer
-    }
+    },
+    devTools: false
 })
 
 export type RootState = ReturnType<typeof store.getState>
