@@ -13,8 +13,6 @@ import orderRouter from './routes/order.js'
 import sellerRouter from './routes/seller.js'
 import searchRouter from './routes/search.js'
 
-import { authenticateToken } from './middleware/authenticateToken.js'
-
 
 export const prisma = new PrismaClient()
 
@@ -22,7 +20,7 @@ const app = express()
 
 
 const corsOptions = {
-  origin: 'http://localhost:8000',
+  origin: process.env.CLIENT_URL,
   credentials: true
 }
 
