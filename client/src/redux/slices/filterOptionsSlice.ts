@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ProductQueryOption, filterValue, isListOption, isRangeOption } from "../../types/Filter";
+import { ListOption, ProductQueryOption, RangeOption, filterValue, isListOption, isRangeOption } from "../../types/Filter";
 import { filterInitOptions, sellerInitId } from "../../assets/fitlerCategories";
 import { useAppSelector } from "../../hooks/hook";
 import { formatCategoryTitle } from "../../utils/product";
@@ -22,18 +22,18 @@ const filterOptions = createSlice ({
                     
                     } 
                     if(category.type === 'SINGLE_SELECT') {
-                        category.options = category.options.map((op, i) => {
+                        category.options = category.options.map((op, i)=> {
                             return i === index && !op.selected
                             ? {...op, selected: true} 
                             : {...op, selected: false}
-                        })
+                        }) as RangeOption[] | ListOption[]
                     } 
                     if(category.type === 'MULTI_SELECT') {
                         category.options = category.options.map((op, i) => {
                             return i === index 
                             ? {...op, selected: !op.selected} 
                             : op
-                        })                    
+                        }) as RangeOption[] | ListOption[]              
                     }
                 }
                 return category
